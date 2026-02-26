@@ -5,1177 +5,1010 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CrowdPlay — Empieza tu prueba gratuita</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700;1,900&family=Barlow+Condensed:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-    --bg:        #07080f;
-    --surface:   #0d0f1a;
-    --card:      #12152200;
-    --border:    rgba(255,255,255,0.08);
-    --border-mid:rgba(255,255,255,0.15);
-    --text:      #f0f2ff;
-    --muted:     #5a6080;
-    --sub:       #8890b0;
-    --red:       #e8362a;
-    --green:     #1fd670;
-    --indigo:    #5b6ef5;
-    --amber:     #f0b429;
-    --purple:    #8b5cf6;
+    --bg: #090b11;
+    --surface: #10131c;
+    --card: #171b27;
+    --border: rgba(255,255,255,0.09);
+    --border-mid: rgba(255,255,255,0.16);
+    --text: #eef0f8;
+    --secondary: #8b92b0;
+    --muted: #4a5070;
+    --red: #e8362a;
+    --red-glow: rgba(232,54,42,0.25);
+    --green: #1fd670;
+    --indigo: #5b6ef5;
+    --amber: #f0b429;
 }
 
 html, body {
     min-height: 100vh;
     background: var(--bg);
     color: var(--text);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Barlow', sans-serif;
     font-size: 16px;
     line-height: 1.6;
     overflow-x: hidden;
 }
 
-/* ── BACKGROUND ── */
-.bg-layer {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background:
-        radial-gradient(ellipse 80% 50% at 10% 20%, rgba(91,110,245,0.07) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 90% 80%, rgba(139,92,246,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 30% at 50% 50%, rgba(232,54,42,0.03) 0%, transparent 70%);
-}
-.grid-overlay {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.025;
-    background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
-    background-size: 48px 48px;
+/* ── BACKGROUND & GLOWS ── */
+body::before {
+    content: '';
+    position: fixed;
+    top: -10%;
+    left: -5%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--red-glow) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(80px);
 }
 
-/* ── LAYOUT ── */
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    right: -5%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(91,110,245,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(80px);
+}
+
+/* ── NOISE OVERLAY ── */
+body {
+    position: relative;
+}
+
+/* ── PAGE LAYOUT ── */
 .page {
-    position: relative; z-index: 1;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
     display: grid;
     grid-template-columns: 1fr 480px;
-    min-height: 100vh;
+    gap: 0;
+    background: var(--bg);
 }
 
 /* ── LEFT PANEL ── */
 .left {
-    display: flex; flex-direction: column;
-    padding: 48px 56px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 60px 80px;
+    background: var(--surface);
+    overflow-y: auto;
     border-right: 1px solid var(--border);
-    position: sticky; top: 0; height: 100vh; overflow: hidden;
 }
 
-.logo {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.5rem; font-weight: 800;
-    letter-spacing: -0.02em; color: var(--text);
-    display: flex; align-items: center; gap: 10px;
-    text-decoration: none; margin-bottom: auto;
-}
-.logo-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--red), var(--purple));
-    display: flex; align-items: center; justify-content: center;
+.left-header {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
-.left-hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px 0; }
-
-.left-tag {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(31,214,112,0.1); border: 1px solid rgba(31,214,112,0.2);
-    border-radius: 20px; padding: 5px 14px;
-    font-size: 0.72rem; font-weight: 600; color: var(--green);
-    letter-spacing: 0.08em; text-transform: uppercase;
-    margin-bottom: 24px; width: fit-content;
+.logo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
-.left-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
 
-.left-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 3rem; font-weight: 800; line-height: 1.1;
-    letter-spacing: -0.03em; color: var(--text);
-    margin-bottom: 20px;
+.logo-box {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--red) 0%, #c41f1a 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 8px 24px var(--red-glow);
 }
-.left-title span { color: var(--red); }
 
-.left-desc {
-    font-size: 1rem; color: var(--sub); line-height: 1.7;
-    max-width: 380px; margin-bottom: 40px;
+.logo-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.logo-text .red {
+    color: var(--red);
+    font-style: italic;
+}
+
+.eyebrow {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 16px;
 }
 
 .trial-badge {
-    background: rgba(240,180,41,0.08);
-    border: 1px solid rgba(240,180,41,0.2);
-    border-radius: 16px; padding: 20px 24px;
-    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: fit-content;
+    padding: 8px 16px;
+    background: rgba(240,180,41,0.1);
+    border: 1px solid rgba(240,180,41,0.3);
+    border-radius: 8px;
 }
-.trial-badge-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.4rem; font-weight: 800; color: var(--amber);
-    margin-bottom: 4px;
-}
-.trial-badge-sub { font-size: 0.82rem; color: var(--sub); }
 
-.features-list { display: flex; flex-direction: column; gap: 12px; }
-.feature-item {
-    display: flex; align-items: center; gap: 12px;
-    font-size: 0.88rem; color: var(--sub);
+.trial-badge .number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--amber);
 }
-.feature-icon {
-    width: 28px; height: 28px; border-radius: 8px;
-    background: rgba(91,110,245,0.12); border: 1px solid rgba(91,110,245,0.2);
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    font-size: 0.8rem;
+
+.trial-badge .text {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: var(--secondary);
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.feature::before {
+    content: '●';
+    color: var(--red);
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 .left-footer {
-    margin-top: auto; padding-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 24px;
     border-top: 1px solid var(--border);
-    font-size: 0.75rem; color: var(--muted);
+    font-size: 12px;
 }
 
-/* ── RIGHT PANEL (FORM) ── */
+.left-footer a {
+    color: var(--secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.left-footer a:hover {
+    color: var(--text);
+}
+
+/* ── RIGHT PANEL ── */
 .right {
-    padding: 48px 40px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border-left: 1px solid var(--border);
     overflow-y: auto;
-    display: flex; flex-direction: column;
 }
 
-/* ── STEPS NAV ── */
+/* ── STEPS INDICATOR ── */
 .steps-nav {
-    display: flex; align-items: center; gap: 0;
-    margin-bottom: 40px; position: relative;
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 24px;
+    background: rgba(23,27,39,0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
 }
-.steps-nav::before {
-    content: ''; position: absolute;
-    top: 14px; left: 14px; right: 14px; height: 1px;
-    background: var(--border);
-}
+
 .step-dot {
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    flex: 1; position: relative; z-index: 1;
-    cursor: default;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--muted);
+    border: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.3s;
 }
-.step-circle {
-    width: 28px; height: 28px; border-radius: 50%;
-    border: 2px solid var(--border);
-    background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.65rem; font-weight: 800; color: var(--muted);
-    font-family: 'Syne', sans-serif;
-    transition: all 0.3s ease;
+
+.step-dot.active {
+    background: var(--red);
+    border-color: rgba(232,54,42,0.5);
+    box-shadow: 0 0 16px var(--red-glow);
+    font-weight: 900;
 }
-.step-label {
-    font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.08em; color: var(--muted);
-    transition: color 0.3s; white-space: nowrap;
+
+.step-dot.done {
+    background: var(--green);
+    color: white;
 }
-.step-dot.active .step-circle {
-    background: var(--indigo); border-color: var(--indigo); color: white;
-    box-shadow: 0 0 0 4px rgba(91,110,245,0.2);
+
+.step-dot:not(.active):not(.done):hover {
+    border-color: var(--border-mid);
 }
-.step-dot.active .step-label { color: var(--text); }
-.step-dot.done .step-circle {
-    background: var(--green); border-color: var(--green); color: white;
-}
-.step-dot.done .step-label { color: var(--green); }
 
 /* ── FORM PANELS ── */
-.form-panel { display: none; animation: fadeUp 0.35s ease; }
-.form-panel.active { display: block; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-
-.panel-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.6rem; font-weight: 800; color: var(--text);
-    margin-bottom: 6px; letter-spacing: -0.02em;
-}
-.panel-sub { font-size: 0.88rem; color: var(--sub); margin-bottom: 32px; line-height: 1.5; }
-
-/* ── FORM FIELDS ── */
-.field { margin-bottom: 20px; }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-.field-label {
-    display: block; font-size: 0.72rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.08em;
-    color: var(--sub); margin-bottom: 8px;
-}
-.field-input {
-    width: 100%; background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border-mid); border-radius: 12px;
-    padding: 12px 16px; color: var(--text);
-    font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
-    outline: none; transition: all 0.2s;
-}
-.field-input:focus {
-    border-color: var(--indigo);
-    background: rgba(91,110,245,0.06);
-    box-shadow: 0 0 0 3px rgba(91,110,245,0.12);
-}
-.field-input::placeholder { color: var(--muted); }
-.field-input.error { border-color: var(--red); background: rgba(232,54,42,0.05); }
-
-.field-select {
-    width: 100%; background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border-mid); border-radius: 12px;
-    padding: 12px 16px; color: var(--text);
-    font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
-    outline: none; cursor: pointer; transition: all 0.2s;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6080' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 14px center;
-}
-.field-select:focus { border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(91,110,245,0.12); }
-.field-select option { background: #1a1d2e; color: var(--text); }
-
-.field-hint {
-    font-size: 0.72rem; color: var(--muted); margin-top: 6px;
-    display: flex; align-items: center; gap: 6px;
-}
-.field-error { font-size: 0.72rem; color: var(--red); margin-top: 6px; display: none; }
-
-/* ── PASSWORD ── */
-.pwd-wrap { position: relative; }
-.pwd-toggle {
-    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-    background: none; border: none; cursor: pointer; color: var(--muted);
-    padding: 0; display: flex;
-}
-.pwd-strength { display: flex; gap: 4px; margin-top: 8px; }
-.pwd-bar {
-    flex: 1; height: 3px; border-radius: 2px;
-    background: var(--border); transition: background 0.3s;
+.form-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 32px 24px;
+    overflow-y: auto;
 }
 
-/* ── API KEY HELPER ── */
-.api-helper {
-    background: rgba(240,180,41,0.06);
-    border: 1px solid rgba(240,180,41,0.15);
-    border-radius: 12px; padding: 16px;
-    margin-top: 8px;
-}
-.api-helper-title {
-    font-size: 0.72rem; font-weight: 700; color: var(--amber);
-    text-transform: uppercase; letter-spacing: 0.08em;
-    margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
-}
-.api-steps { display: flex; flex-direction: column; gap: 6px; }
-.api-step {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 0.78rem; color: var(--sub); line-height: 1.4;
-}
-.api-step-num {
-    width: 18px; height: 18px; border-radius: 50%;
-    background: rgba(240,180,41,0.15); border: 1px solid rgba(240,180,41,0.3);
-    color: var(--amber); font-size: 0.6rem; font-weight: 800;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    margin-top: 1px;
-}
-.api-link {
-    color: var(--indigo); text-decoration: none;
-    border-bottom: 1px solid rgba(91,110,245,0.3);
-}
-.api-link:hover { color: white; }
-
-/* ── COLOR PICKER ── */
-.color-picker-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-.color-swatch {
-    width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
-    border: 2px solid transparent; transition: all 0.2s;
-}
-.color-swatch.selected { border-color: white; transform: scale(1.15); }
-.color-custom {
-    width: 32px; height: 32px; border-radius: 50%;
-    border: 2px dashed var(--border-mid); cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--muted); font-size: 0.7rem; overflow: hidden;
-}
-.color-custom input[type="color"] {
-    width: 100%; height: 100%; opacity: 0; cursor: pointer; position: absolute;
+.form-panel {
+    display: none;
 }
 
-/* ── LOGO UPLOAD ── */
-.logo-upload {
-    border: 2px dashed var(--border-mid); border-radius: 14px;
-    padding: 24px; text-align: center; cursor: pointer;
-    transition: all 0.2s; position: relative;
+.form-panel.active {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
-.logo-upload:hover { border-color: var(--indigo); background: rgba(91,110,245,0.04); }
-.logo-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.logo-preview { width: 64px; height: 64px; border-radius: 12px; object-fit: contain; margin: 0 auto 8px; display: none; }
-.logo-upload-icon { font-size: 1.8rem; margin-bottom: 8px; }
-.logo-upload-text { font-size: 0.78rem; color: var(--sub); }
-.logo-upload-sub { font-size: 0.68rem; color: var(--muted); margin-top: 4px; }
 
-/* ── PLAN SELECTOR ── */
-.plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
-.plan-card {
-    border: 1px solid var(--border); border-radius: 14px; padding: 16px;
-    cursor: pointer; transition: all 0.2s; position: relative;
-    background: rgba(255,255,255,0.02);
+.form-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin-bottom: 8px;
 }
-.plan-card:hover { border-color: var(--border-mid); }
-.plan-card.selected { border-color: var(--indigo); background: rgba(91,110,245,0.08); }
-.plan-card.selected::after {
-    content: '✓'; position: absolute; top: 10px; right: 12px;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: var(--indigo); color: white;
-    font-size: 0.65rem; font-weight: 800;
-    display: flex; align-items: center; justify-content: center;
-}
-.plan-name {
-    font-family: 'Syne', sans-serif; font-size: 0.88rem;
-    font-weight: 800; margin-bottom: 2px; color: var(--text);
-}
-.plan-price { font-size: 0.72rem; color: var(--muted); margin-bottom: 8px; }
-.plan-features { display: flex; flex-direction: column; gap: 3px; }
-.plan-feat { font-size: 0.68rem; color: var(--sub); display: flex; align-items: center; gap: 5px; }
-.plan-feat::before { content: '·'; color: var(--indigo); font-size: 1rem; line-height: 1; }
 
-/* ── VENUE TYPE ── */
-.type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.type-card {
-    border: 1px solid var(--border); border-radius: 12px; padding: 14px 10px;
-    cursor: pointer; text-align: center; transition: all 0.2s;
-    background: rgba(255,255,255,0.02);
+.form-description {
+    font-size: 13px;
+    color: var(--secondary);
+    margin-bottom: 8px;
 }
-.type-card:hover { border-color: var(--border-mid); }
-.type-card.selected { border-color: var(--indigo); background: rgba(91,110,245,0.08); }
-.type-icon { font-size: 1.4rem; margin-bottom: 4px; }
-.type-name { font-size: 0.68rem; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 0.06em; }
 
-/* ── SUBMIT BTN ── */
-.btn-next {
-    width: 100%; padding: 15px; border-radius: 14px; border: none;
-    background: linear-gradient(135deg, var(--indigo), var(--purple));
-    color: white; font-family: 'Syne', sans-serif;
-    font-size: 0.92rem; font-weight: 700; cursor: pointer;
-    letter-spacing: 0.04em; text-transform: uppercase;
-    transition: all 0.2s; margin-top: 8px;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
-.btn-next:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(91,110,245,0.3); }
-.btn-next:active { transform: translateY(0); }
-.btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-.btn-back {
-    width: 100%; padding: 12px; border-radius: 14px;
-    border: 1px solid var(--border); background: transparent;
-    color: var(--sub); font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem; cursor: pointer; margin-top: 10px;
+.form-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--secondary);
+}
+
+.form-input,
+.form-select {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
     transition: all 0.2s;
 }
-.btn-back:hover { border-color: var(--border-mid); color: var(--text); }
 
-.btn-row { display: flex; flex-direction: column; gap: 0; margin-top: 24px; }
-
-/* ── TERMS ── */
-.terms {
-    font-size: 0.72rem; color: var(--muted); text-align: center;
-    margin-top: 16px; line-height: 1.5;
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    background: rgba(255,255,255,0.06);
+    border-color: var(--red);
+    box-shadow: 0 0 12px var(--red-glow);
 }
-.terms a { color: var(--sub); }
 
-/* ── SUCCESS SCREEN ── */
-#success-screen { display: none; }
-.success-hero { text-align: center; padding: 20px 0 32px; }
+.form-input::placeholder {
+    color: var(--muted);
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.color-option {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.color-option:hover {
+    transform: scale(1.05);
+}
+
+.color-option.selected {
+    border-color: white;
+    box-shadow: 0 0 16px currentColor;
+}
+
+/* Plan Grid */
+.plan-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.plan-option {
+    padding: 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.plan-option:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: var(--border-mid);
+}
+
+.plan-option.selected {
+    background: rgba(232,54,42,0.15);
+    border-color: var(--red);
+    box-shadow: 0 0 12px var(--red-glow);
+}
+
+.plan-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.plan-price {
+    font-size: 12px;
+    color: var(--secondary);
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    flex: 1;
+    background: var(--red);
+    color: white;
+    box-shadow: 0 4px 12px var(--red-glow);
+}
+
+.btn-primary:hover {
+    background: #d42620;
+    box-shadow: 0 6px 20px var(--red-glow);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    flex: 1;
+    background: transparent;
+    color: var(--secondary);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: var(--border-mid);
+    color: var(--text);
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* Success Panel */
+.success-panel {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 24px;
+    padding: 48px 24px;
+}
+
+.success-panel.active {
+    display: flex;
+}
+
 .success-icon {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: rgba(31,214,112,0.12); border: 2px solid rgba(31,214,112,0.3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2rem; margin: 0 auto 20px;
-    animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+    font-size: 60px;
+    animation: bounce 0.6s ease-out;
 }
-@keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
+
 .success-title {
-    font-family: 'Syne', sans-serif; font-size: 1.8rem;
-    font-weight: 800; color: var(--text); margin-bottom: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--text);
 }
-.success-sub { font-size: 0.9rem; color: var(--sub); line-height: 1.6; }
 
-.url-cards { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
-.url-card {
-    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 16px;
-    display: flex; align-items: center; gap: 12px;
+.success-message {
+    font-size: 13px;
+    color: var(--secondary);
+    max-width: 300px;
 }
-.url-card-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; font-size: 1rem;
-}
-.url-card-info { flex: 1; min-width: 0; }
-.url-card-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 2px; }
-.url-card-url { font-size: 0.78rem; color: var(--indigo); font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.url-copy-btn {
-    padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
-    background: transparent; color: var(--sub); font-size: 0.68rem;
-    font-weight: 700; cursor: pointer; flex-shrink: 0; transition: all 0.15s;
-}
-.url-copy-btn:hover { border-color: var(--indigo); color: var(--indigo); }
 
-.trial-countdown {
-    background: rgba(240,180,41,0.08); border: 1px solid rgba(240,180,41,0.2);
-    border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 16px;
+.venue-url {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--green);
+    font-family: monospace;
+    word-break: break-all;
 }
-.trial-countdown-num {
-    font-family: 'Syne', sans-serif; font-size: 2.4rem;
-    font-weight: 800; color: var(--amber); line-height: 1;
+
+/* Logo Upload */
+.logo-upload {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.04);
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    overflow: hidden;
+    margin-bottom: 16px;
 }
-.trial-countdown-label { font-size: 0.72rem; color: var(--sub); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
 
-/* ── TOAST ── */
-.toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 12px 20px;
-    font-size: 0.82rem; font-weight: 600; color: var(--text);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
-    z-index: 999; white-space: nowrap;
+.logo-upload:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: var(--border-mid);
 }
-.toast.show { transform: translateX(-50%) translateY(0); }
-.toast.success { border-color: rgba(31,214,112,0.3); color: var(--green); }
-.toast.error   { border-color: rgba(232,54,42,0.3); color: var(--red); }
-.toast.warning { border-color: rgba(240,180,41,0.3); color: var(--amber); }
 
-/* ── SPINNER ── */
-.spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.logo-upload img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
 
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-    .page { grid-template-columns: 1fr; }
-    .left { display: none; }
-    .right { padding: 32px 24px; }
+.logo-upload input {
+    display: none;
+}
+
+.upload-text {
+    font-size: 12px;
+    color: var(--secondary);
+    pointer-events: none;
+}
+
+/* Error Message */
+.error-message {
+    padding: 12px;
+    background: rgba(232,54,42,0.1);
+    border: 1px solid var(--red);
+    border-radius: 6px;
+    color: var(--red);
+    font-size: 12px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* Animations */
+@keyframes bounce {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-mid);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .page {
+        grid-template-columns: 1fr 400px;
+    }
+    .left {
+        padding: 40px 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page {
+        grid-template-columns: 1fr;
+    }
+    .left {
+        display: none;
+    }
+    .right {
+        border-left: none;
+    }
+    .form-title {
+        font-size: 18px;
+    }
 }
 </style>
 </head>
 <body>
-<div class="bg-layer"></div>
-<div class="grid-overlay"></div>
 
 <div class="page">
-    <!-- ── LEFT PANEL ── -->
     <div class="left">
-        <a class="logo" href="#">
-            <div class="logo-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        <div class="left-header">
+            <div class="logo-section">
+                <div class="logo-box">🎵</div>
+                <div>
+                    <div class="eyebrow">Bienvenido a</div>
+                    <div class="logo-text">
+                        <span>Crowd</span><span class="red">Play</span>
+                    </div>
+                </div>
             </div>
-            CrowdPlay
-        </a>
-
-        <div class="left-hero">
-            <div class="left-tag">30 días gratis, sin tarjeta</div>
-            <div class="left-title">La rockola<br>que <span>conecta</span><br>tu bar.</div>
-            <div class="left-desc">
-                Tus clientes piden canciones, interactúan entre mesas y viven una experiencia única. Tú controlas todo desde el panel del DJ.
-            </div>
-
             <div class="trial-badge">
-                <div class="trial-badge-title">Trial 30 días — Gratis</div>
-                <div class="trial-badge-sub">Acceso completo a todas las funciones. Sin compromisos. Sin tarjeta de crédito.</div>
+                <div class="number">30</div>
+                <div class="text">días gratis</div>
             </div>
+        </div>
 
-            <div class="features-list">
-                <div class="feature-item">
-                    <div class="feature-icon">🎵</div>
-                    Cola de canciones en tiempo real con votación
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🎤</div>
-                    Karaoke integrado con dedicatorias en pantalla
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">💬</div>
-                    Chat social entre mesas con disparadores rápidos
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🎛️</div>
-                    Sampler DJ profesional con librería de efectos
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">📺</div>
-                    Cintillos publicitarios en TV para generar ingresos
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🛎️</div>
-                    Módulo de mesero con seguimiento en tiempo real
-                </div>
-            </div>
+        <div class="features">
+            <div class="feature">Control total de la música en tu bar</div>
+            <div class="feature">Tus clientes eligen las canciones</div>
+            <div class="feature">Sistema de colas en tiempo real</div>
+            <div class="feature">Panel de control profesional</div>
+            <div class="feature">Estadísticas y reportes detallados</div>
+            <div class="feature">Soporte técnico 24/7</div>
         </div>
 
         <div class="left-footer">
-            Al registrarte aceptas los <a href="#" style="color:var(--sub)">Términos de uso</a> y la <a href="#" style="color:var(--sub)">Política de privacidad</a> de CrowdPlay.
+            <p style="margin-bottom: 8px;">© 2024 CrowdPlay. Todos los derechos reservados.</p>
+            <a href="#">Términos de servicio</a>
+            <a href="#">Política de privacidad</a>
         </div>
     </div>
 
-    <!-- ── RIGHT PANEL ── -->
     <div class="right">
-        <!-- Steps -->
         <div class="steps-nav">
-            <div class="step-dot active" id="sdot-1">
-                <div class="step-circle">1</div>
-                <div class="step-label">Cuenta</div>
-            </div>
-            <div class="step-dot" id="sdot-2">
-                <div class="step-circle">2</div>
-                <div class="step-label">Tu Venue</div>
-            </div>
-            <div class="step-dot" id="sdot-3">
-                <div class="step-circle">3</div>
-                <div class="step-label">Identidad</div>
-            </div>
-            <div class="step-dot" id="sdot-4">
-                <div class="step-circle">4</div>
-                <div class="step-label">Plan</div>
-            </div>
+            <div class="step-dot active" onclick="goStep(1)">1</div>
+            <div class="step-dot" onclick="goStep(2)">2</div>
+            <div class="step-dot" onclick="goStep(3)">3</div>
+            <div class="step-dot" onclick="goStep(4)">4</div>
         </div>
 
-        <!-- ── STEP 1: CUENTA ── -->
-        <div class="form-panel active" id="panel-1">
-            <div class="panel-title">Crea tu cuenta</div>
-            <div class="panel-sub">El acceso principal al panel de administración de CrowdPlay.</div>
-
-            <div class="field-row">
-                <div class="field">
-                    <label class="field-label">Nombre</label>
-                    <input id="f-name" class="field-input" type="text" placeholder="Jorge" autocomplete="given-name">
-                    <div class="field-error" id="err-name">Requerido</div>
+        <div class="form-content">
+            <!-- STEP 1 -->
+            <div class="form-panel active">
+                <h2 class="form-title">Tu Cuenta</h2>
+                <p class="form-description">Información de acceso a CrowdPlay</p>
+                
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="tu@email.com">
                 </div>
-                <div class="field">
-                    <label class="field-label">Apellido</label>
-                    <input id="f-surname" class="field-input" type="text" placeholder="Lozano" autocomplete="family-name">
-                    <div class="field-error" id="err-surname">Requerido</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" id="password" class="form-input" placeholder="Min. 8 caracteres">
                 </div>
-            </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Confirmar Contraseña</label>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="Repite tu contraseña">
+                </div>
 
-            <div class="field">
-                <label class="field-label">Correo electrónico</label>
-                <input id="f-email" class="field-input" type="email" placeholder="tu@bar.com" autocomplete="email">
-                <div class="field-error" id="err-email">Ingresa un email válido</div>
-            </div>
-
-            <div class="field">
-                <label class="field-label">WhatsApp / Teléfono</label>
-                <input id="f-phone" class="field-input" type="tel" placeholder="+52 868 169 4978" autocomplete="tel">
-                <div class="field-hint">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                    Te enviaremos alertas importantes del sistema aquí
+                <div class="error-message" id="step1Error"></div>
+                
+                <div class="button-group">
+                    <button class="btn-primary btn-full" onclick="goStep2()">Siguiente →</button>
                 </div>
             </div>
 
-            <div class="field">
-                <label class="field-label">Contraseña</label>
-                <div class="pwd-wrap">
-                    <input id="f-password" class="field-input" type="password" placeholder="Mínimo 8 caracteres" oninput="updatePwdStrength(this.value)" autocomplete="new-password" style="padding-right:44px;">
-                    <button class="pwd-toggle" type="button" onclick="togglePwd('f-password',this)">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    </button>
+            <!-- STEP 2 -->
+            <div class="form-panel">
+                <h2 class="form-title">Tu Bar</h2>
+                <p class="form-description">Información de tu establecimiento</p>
+                
+                <div class="form-group">
+                    <label class="form-label">Nombre del Bar</label>
+                    <input type="text" id="venueName" class="form-input" placeholder="Ej: El Rocín">
                 </div>
-                <div class="pwd-strength">
-                    <div class="pwd-bar" id="pb1"></div>
-                    <div class="pwd-bar" id="pb2"></div>
-                    <div class="pwd-bar" id="pb3"></div>
-                    <div class="pwd-bar" id="pb4"></div>
+                
+                <div class="form-group">
+                    <label class="form-label">Ciudad</label>
+                    <input type="text" id="city" class="form-input" placeholder="Ej: Madrid">
                 </div>
-                <div class="field-error" id="err-password">Mínimo 8 caracteres</div>
-            </div>
-
-            <div class="field">
-                <label class="field-label">Confirmar contraseña</label>
-                <div class="pwd-wrap">
-                    <input id="f-password2" class="field-input" type="password" placeholder="Repite tu contraseña" autocomplete="new-password" style="padding-right:44px;">
-                    <button class="pwd-toggle" type="button" onclick="togglePwd('f-password2',this)">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    </button>
+                
+                <div class="form-group">
+                    <label class="form-label">País</label>
+                    <input type="text" id="country" class="form-input" placeholder="Ej: España">
                 </div>
-                <div class="field-error" id="err-password2">Las contraseñas no coinciden</div>
-            </div>
 
-            <div class="btn-row">
-                <button class="btn-next" onclick="goStep2()">
-                    Continuar
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
-            </div>
-            <div class="terms">¿Ya tienes cuenta? <a href="admin.html" style="color:var(--indigo)">Inicia sesión aquí</a></div>
-        </div>
-
-        <!-- ── STEP 2: VENUE ── -->
-        <div class="form-panel" id="panel-2">
-            <div class="panel-title">Tu venue</div>
-            <div class="panel-sub">Cuéntanos sobre tu negocio. Esta información aparecerá en la app de tus clientes.</div>
-
-            <div class="field">
-                <label class="field-label">Nombre del venue</label>
-                <input id="f-vname" class="field-input" type="text" placeholder="Bar El Palenque" oninput="generateSlug(this.value)">
-                <div class="field-error" id="err-vname">Requerido</div>
-            </div>
-
-            <div class="field">
-                <label class="field-label">ID único (slug)</label>
-                <input id="f-slug" class="field-input" type="text" placeholder="bar-el-palenque" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'-')">
-                <div class="field-hint">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                    URL de tu app: <span id="slug-preview" style="color:var(--indigo)">crowdplay.app/?venue=...</span>
+                <div class="error-message" id="step2Error"></div>
+                
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="goStep(1)">← Atrás</button>
+                    <button class="btn-primary" onclick="goStep3()">Siguiente →</button>
                 </div>
-                <div class="field-error" id="err-slug">Solo letras, números y guiones</div>
             </div>
 
-            <div class="field">
-                <label class="field-label">Tipo de negocio</label>
-                <div class="type-grid" id="type-grid">
-                    <div class="type-card selected" data-type="bar" onclick="selectType(this,'bar')">
-                        <div class="type-icon">🍺</div><div class="type-name">Bar</div>
-                    </div>
-                    <div class="type-card" data-type="cantina" onclick="selectType(this,'cantina')">
-                        <div class="type-icon">🥃</div><div class="type-name">Cantina</div>
-                    </div>
-                    <div class="type-card" data-type="restaurante" onclick="selectType(this,'restaurante')">
-                        <div class="type-icon">🍽️</div><div class="type-name">Restaurante</div>
-                    </div>
-                    <div class="type-card" data-type="salon" onclick="selectType(this,'salon')">
-                        <div class="type-icon">🎉</div><div class="type-name">Salón</div>
-                    </div>
-                    <div class="type-card" data-type="karaoke" onclick="selectType(this,'karaoke')">
-                        <div class="type-icon">🎤</div><div class="type-name">Karaoke</div>
-                    </div>
-                    <div class="type-card" data-type="otro" onclick="selectType(this,'otro')">
-                        <div class="type-icon">🏠</div><div class="type-name">Otro</div>
+            <!-- STEP 3 -->
+            <div class="form-panel">
+                <h2 class="form-title">Identidad Visual</h2>
+                <p class="form-description">Logo y color del bar</p>
+                
+                <div class="form-group">
+                    <label class="form-label">Logo del Bar</label>
+                    <div class="logo-upload" onclick="document.getElementById('logoInput').click()">
+                        <div id="logoPreview" class="upload-text">Sube tu logo</div>
+                        <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)">
                     </div>
                 </div>
-            </div>
-
-            <div class="field-row">
-                <div class="field">
-                    <label class="field-label">Ciudad</label>
-                    <input id="f-city" class="field-input" type="text" placeholder="Monterrey">
-                    <div class="field-error" id="err-city">Requerido</div>
-                </div>
-                <div class="field">
-                    <label class="field-label">País</label>
-                    <select id="f-country" class="field-select">
-                        <option value="MX">🇲🇽 México</option>
-                        <option value="CO">🇨🇴 Colombia</option>
-                        <option value="AR">🇦🇷 Argentina</option>
-                        <option value="CL">🇨🇱 Chile</option>
-                        <option value="PE">🇵🇪 Perú</option>
-                        <option value="US">🇺🇸 Estados Unidos</option>
-                        <option value="ES">🇪🇸 España</option>
-                        <option value="otro">🌎 Otro</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="field-label" style="display:flex;align-items:center;gap:8px;">
-                    YouTube API Key
-                    <span style="background:rgba(232,54,42,0.12);border:1px solid rgba(232,54,42,0.2);border-radius:4px;padding:1px 6px;font-size:0.6rem;color:var(--red);">REQUERIDO</span>
-                </label>
-                <input id="f-ytkey" class="field-input" type="text" placeholder="AIzaSy...">
-                <div class="field-error" id="err-ytkey">La API Key es requerida para reproducir música</div>
-                <div class="api-helper">
-                    <div class="api-helper-title">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                        ¿Cómo obtener tu API Key?
-                    </div>
-                    <div class="api-steps">
-                        <div class="api-step"><div class="api-step-num">1</div>Ve a <a href="https://console.cloud.google.com" target="_blank" class="api-link">console.cloud.google.com</a> e inicia sesión con Google</div>
-                        <div class="api-step"><div class="api-step-num">2</div>Crea un proyecto nuevo o selecciona uno existente</div>
-                        <div class="api-step"><div class="api-step-num">3</div>Ve a <strong style="color:var(--text)">APIs y servicios → Habilitar APIs</strong> y busca "YouTube Data API v3"</div>
-                        <div class="api-step"><div class="api-step-num">4</div>Ve a <strong style="color:var(--text)">Credenciales → Crear credencial → Clave de API</strong></div>
-                        <div class="api-step"><div class="api-step-num">5</div>Copia la clave y pégala aquí. Es gratuita con cuota diaria generosa.</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Color Principal</label>
+                    <div class="color-grid">
+                        <div class="color-option" style="background: #e8362a;" onclick="selectColor('#e8362a', this)"></div>
+                        <div class="color-option" style="background: #1fd670;" onclick="selectColor('#1fd670', this)"></div>
+                        <div class="color-option" style="background: #5b6ef5;" onclick="selectColor('#5b6ef5', this)"></div>
+                        <div class="color-option" style="background: #f0b429;" onclick="selectColor('#f0b429', this)"></div>
+                        <div class="color-option" style="background: #8b5cf6;" onclick="selectColor('#8b5cf6', this)"></div>
+                        <div class="color-option" style="background: #06b6d4;" onclick="selectColor('#06b6d4', this)"></div>
+                        <div class="color-option" style="background: #ec4899;" onclick="selectColor('#ec4899', this)"></div>
+                        <div class="color-option" style="background: #f59e0b;" onclick="selectColor('#f59e0b', this)"></div>
                     </div>
                 </div>
+
+                <div class="error-message" id="step3Error"></div>
+                
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="goStep(2)">← Atrás</button>
+                    <button class="btn-primary" onclick="goStep4()">Siguiente →</button>
+                </div>
             </div>
 
-            <div class="btn-row">
-                <button class="btn-next" onclick="goStep3()">
-                    Continuar
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
-                <button class="btn-back" onclick="goStep(1)">← Regresar</button>
-            </div>
-        </div>
-
-        <!-- ── STEP 3: IDENTIDAD ── -->
-        <div class="form-panel" id="panel-3">
-            <div class="panel-title">Identidad visual</div>
-            <div class="panel-sub">Personaliza cómo aparece tu venue en la app. Tus clientes verán esto desde la primera pantalla.</div>
-
-            <div class="field">
-                <label class="field-label">Logo del venue</label>
-                <div class="logo-upload" id="logo-upload-area">
-                    <input type="file" id="f-logo" accept="image/*" onchange="handleLogoUpload(event)">
-                    <img class="logo-preview" id="logo-preview-img">
-                    <div id="logo-upload-placeholder">
-                        <div class="logo-upload-icon">🖼️</div>
-                        <div class="logo-upload-text">Arrastra tu logo o haz clic para seleccionar</div>
-                        <div class="logo-upload-sub">PNG, JPG o SVG — Máx. 2MB — Recomendado: 200×200px</div>
+            <!-- STEP 4 -->
+            <div class="form-panel">
+                <h2 class="form-title">Plan</h2>
+                <p class="form-description">Elige el plan que mejor te va</p>
+                
+                <div class="form-group">
+                    <label class="form-label">Tipo de Suscripción</label>
+                    <div class="plan-grid">
+                        <div class="plan-option" onclick="selectPlan('basic', this)">
+                            <div class="plan-name">Básico</div>
+                            <div class="plan-price">$29/mes</div>
+                        </div>
+                        <div class="plan-option" onclick="selectPlan('premium', this)">
+                            <div class="plan-name">Premium</div>
+                            <div class="plan-price">$59/mes</div>
+                        </div>
                     </div>
                 </div>
-                <div class="field-hint" style="margin-top:8px;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                    Si no tienes logo por ahora, puedes saltarte este paso y agregarlo después
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; color: var(--text);">
+                        <input type="checkbox" id="terms" style="cursor: pointer;">
+                        Acepto los términos y condiciones
+                    </label>
+                </div>
+
+                <div class="error-message" id="step4Error"></div>
+                
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="goStep(3)">← Atrás</button>
+                    <button class="btn-primary" onclick="submitRegistration()">Crear Cuenta ✓</button>
                 </div>
             </div>
 
-            <div class="field">
-                <label class="field-label">Color principal</label>
-                <div class="field-hint" style="margin-bottom:8px;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                    Aparecerá en botones, highlights y elementos de tu app
-                </div>
-                <div class="color-picker-row">
-                    <div class="color-swatch selected" style="background:#e8362a" onclick="selectColor('#e8362a',this)" data-color="#e8362a"></div>
-                    <div class="color-swatch" style="background:#5b6ef5" onclick="selectColor('#5b6ef5',this)" data-color="#5b6ef5"></div>
-                    <div class="color-swatch" style="background:#1fd670" onclick="selectColor('#1fd670',this)" data-color="#1fd670"></div>
-                    <div class="color-swatch" style="background:#f0b429" onclick="selectColor('#f0b429',this)" data-color="#f0b429"></div>
-                    <div class="color-swatch" style="background:#8b5cf6" onclick="selectColor('#8b5cf6',this)" data-color="#8b5cf6"></div>
-                    <div class="color-swatch" style="background:#06b6d4" onclick="selectColor('#06b6d4',this)" data-color="#06b6d4"></div>
-                    <div class="color-swatch" style="background:#ec4899" onclick="selectColor('#ec4899',this)" data-color="#ec4899"></div>
-                    <div class="color-custom" title="Color personalizado" style="position:relative;">
-                        <span>+</span>
-                        <input type="color" id="f-color-custom" onchange="selectColor(this.value,null,true)">
-                    </div>
-                </div>
-                <input type="hidden" id="f-color" value="#e8362a">
-            </div>
-
-            <div class="field">
-                <label class="field-label">Capacidad aproximada del venue</label>
-                <select id="f-capacity" class="field-select">
-                    <option value="small">Pequeño — hasta 50 personas</option>
-                    <option value="medium" selected>Mediano — 50 a 150 personas</option>
-                    <option value="large">Grande — 150 a 400 personas</option>
-                    <option value="xlarge">Muy grande — más de 400 personas</option>
-                </select>
-                <div class="field-hint">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                    Nos ayuda a recomendarte el plan ideal para tu operación
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="field-label">¿Cómo te enteraste de CrowdPlay? <span style="color:var(--muted)">(opcional)</span></label>
-                <select id="f-source" class="field-select">
-                    <option value="">Selecciona una opción</option>
-                    <option value="referido">Me lo recomendó alguien</option>
-                    <option value="redes">Redes sociales</option>
-                    <option value="google">Búsqueda en Google</option>
-                    <option value="evento">Lo vi en un bar</option>
-                    <option value="otro">Otro</option>
-                </select>
-            </div>
-
-            <div class="btn-row">
-                <button class="btn-next" onclick="goStep4()">
-                    Continuar
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
-                <button class="btn-back" onclick="goStep(2)">← Regresar</button>
-            </div>
-        </div>
-
-        <!-- ── STEP 4: PLAN ── -->
-        <div class="form-panel" id="panel-4">
-            <div class="panel-title">Elige tu plan</div>
-            <div class="panel-sub">Empieza con el Trial gratuito de 30 días y cambia cuando quieras. Acceso completo desde el primer día.</div>
-
-            <div class="plan-grid">
-                <div class="plan-card selected" data-plan="trial" onclick="selectPlan(this,'trial')">
-                    <div class="plan-name">Trial</div>
-                    <div class="plan-price">30 días gratis</div>
-                    <div class="plan-features">
-                        <div class="plan-feat">Todas las funciones</div>
-                        <div class="plan-feat">Sin tarjeta</div>
-                        <div class="plan-feat">2 usuarios staff</div>
-                    </div>
-                </div>
-                <div class="plan-card" data-plan="basico" onclick="selectPlan(this,'basico')">
-                    <div class="plan-name">Básico</div>
-                    <div class="plan-price">$499 / mes</div>
-                    <div class="plan-features">
-                        <div class="plan-feat">Cola + karaoke</div>
-                        <div class="plan-feat">10 mesas máx</div>
-                        <div class="plan-feat">2 usuarios staff</div>
-                    </div>
-                </div>
-                <div class="plan-card" data-plan="pro" onclick="selectPlan(this,'pro')">
-                    <div class="plan-name">Pro</div>
-                    <div class="plan-price">$999 / mes</div>
-                    <div class="plan-features">
-                        <div class="plan-feat">Riffs + Chat</div>
-                        <div class="plan-feat">Mesas ilimitadas</div>
-                        <div class="plan-feat">5 usuarios staff</div>
-                    </div>
-                </div>
-                <div class="plan-card" data-plan="business" onclick="selectPlan(this,'business')">
-                    <div class="plan-name">Business</div>
-                    <div class="plan-price">$1,499 / mes</div>
-                    <div class="plan-features">
-                        <div class="plan-feat">Módulo mesero</div>
-                        <div class="plan-feat">10 usuarios staff</div>
-                        <div class="plan-feat">Analytics completo</div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="background:rgba(91,110,245,0.06);border:1px solid rgba(91,110,245,0.15);border-radius:12px;padding:14px 16px;margin-bottom:20px;">
-                <div style="font-size:0.72rem;font-weight:700;color:var(--indigo);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">💡 Recomendación</div>
-                <div style="font-size:0.78rem;color:var(--sub);line-height:1.5;">Empieza con el <strong style="color:var(--text)">Trial</strong> — sin costo, sin compromisos. Tienes 30 días para explorar todo antes de decidir qué plan se adapta mejor a tu operación.</div>
-            </div>
-
-            <div class="field">
-                <label class="field-label" style="display:flex;align-items:center;gap:8px;">
-                    Código de descuento
-                    <span style="color:var(--muted);font-size:0.65rem;font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span>
-                </label>
-                <input id="f-coupon" class="field-input" type="text" placeholder="CROWDPLAY30" style="text-transform:uppercase;">
-            </div>
-
-            <div style="border-top:1px solid var(--border);padding-top:16px;margin-bottom:4px;">
-                <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-                    <input type="checkbox" id="f-terms" style="margin-top:3px;accent-color:var(--indigo);">
-                    <span style="font-size:0.78rem;color:var(--sub);line-height:1.5;">
-                        Acepto los <a href="#" style="color:var(--indigo)">Términos de servicio</a> y la <a href="#" style="color:var(--indigo)">Política de privacidad</a> de CrowdPlay
-                    </span>
-                </label>
-                <div class="field-error" id="err-terms">Debes aceptar los términos para continuar</div>
-            </div>
-
-            <div class="btn-row">
-                <button class="btn-next" id="btn-register" onclick="submitRegistration()">
-                    <span id="btn-register-text">Crear mi venue gratis</span>
-                    <div class="spinner" id="btn-register-spinner" style="display:none;"></div>
-                </button>
-                <button class="btn-back" onclick="goStep(3)">← Regresar</button>
-            </div>
-        </div>
-
-        <!-- ── SUCCESS ── -->
-        <div id="success-screen">
-            <div class="success-hero">
+            <!-- SUCCESS -->
+            <div class="success-panel">
                 <div class="success-icon">🎉</div>
-                <div class="success-title">¡Tu venue está listo!</div>
-                <div class="success-sub" id="success-sub">Bienvenido a CrowdPlay. Tu trial de 30 días ya empezó.</div>
-            </div>
-
-            <div class="trial-countdown">
-                <div class="trial-countdown-num">30</div>
-                <div class="trial-countdown-label">días de prueba gratuita</div>
-            </div>
-
-            <div class="url-cards" id="url-cards">
-                <div class="url-card">
-                    <div class="url-card-icon" style="background:rgba(91,110,245,0.12);">📱</div>
-                    <div class="url-card-info">
-                        <div class="url-card-label">App para clientes</div>
-                        <div class="url-card-url" id="url-client">crowdplay.app/?venue=...</div>
-                    </div>
-                    <button class="url-copy-btn" onclick="copyUrl('url-client')">Copiar</button>
-                </div>
-                <div class="url-card">
-                    <div class="url-card-icon" style="background:rgba(232,54,42,0.12);">🎛️</div>
-                    <div class="url-card-info">
-                        <div class="url-card-label">Panel DJ / Admin</div>
-                        <div class="url-card-url" id="url-admin">crowdplay.app/admin.html?venue=...</div>
-                    </div>
-                    <button class="url-copy-btn" onclick="copyUrl('url-admin')">Copiar</button>
-                </div>
-                <div class="url-card">
-                    <div class="url-card-icon" style="background:rgba(31,214,112,0.12);">📺</div>
-                    <div class="url-card-info">
-                        <div class="url-card-label">Display TV</div>
-                        <div class="url-card-url" id="url-tv">crowdplay.app/tv.html?venue=...</div>
-                    </div>
-                    <button class="url-copy-btn" onclick="copyUrl('url-tv')">Copiar</button>
-                </div>
-            </div>
-
-            <button class="btn-next" onclick="goToAdmin()" style="margin-top:8px;">
-                Ir al panel de administración
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-
-            <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:16px;">
-                <div style="font-size:0.72rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">📧 Revisa tu correo</div>
-                <div style="font-size:0.78rem;color:var(--muted);line-height:1.5;">Te enviamos un correo con tus URLs y las instrucciones para configurar tu primera noche. Si no aparece, revisa la carpeta de spam.</div>
+                <div class="success-title">¡Bienvenido!</div>
+                <div class="success-message">Tu bar está listo. Aquí está tu URL:</div>
+                <div class="venue-url" id="venueUrl"></div>
+                <button class="btn-primary btn-full" onclick="window.location.href='index.html?venue=' + window.venueId">Ir a CrowdPlay →</button>
             </div>
         </div>
+    </div>
+</div>
 
-    </div><!-- /right -->
-</div><!-- /page -->
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js"></script>
 
 <script>
-// ── FIREBASE ──
 const firebaseConfig = {
     apiKey: "AIzaSyBZLKKiAPihhPFIiNYXVxu70pYdBEso7Xo",
     authDomain: "crowdplayapp-641b0.firebaseapp.com",
     projectId: "crowdplayapp-641b0",
-    storageBucket: "crowdplayapp-641b0.firebasestorage.app",
-    messagingSenderId: "710678103774",
-    appId: "1:710678103774:web:b0fd20fffe4c19c67aa44f"
+    storageBucket: "crowdplayapp-641b0.appspot.com",
+    messagingSenderId: "315873722046",
+    appId: "1:315873722046:web:9e3e9e5e8d5e8d5e8d5e8d"
 };
+
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const db   = firebase.firestore();
+const db = firebase.firestore();
+const storage = firebase.storage();
 
-// ── STATE ──
-let currentStep = 1;
-let selectedType  = 'bar';
-let selectedPlan  = 'trial';
 let selectedColor = '#e8362a';
-let logoBase64    = null;
-let registeredVenueId = null;
+let selectedPlan = 'basic';
+let logoFile = null;
+window.venueId = null;
 
-// ── TOAST ──
-function toast(msg, type = 'info') {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.className = `toast ${type} show`;
-    setTimeout(() => el.classList.remove('show'), 3000);
-}
-
-// ── PASSWORD ──
-function togglePwd(id, btn) {
-    const inp = document.getElementById(id);
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-}
-
-function updatePwdStrength(val) {
-    const bars = ['pb1','pb2','pb3','pb4'];
-    let score = 0;
-    if (val.length >= 8) score++;
-    if (/[A-Z]/.test(val)) score++;
-    if (/[0-9]/.test(val)) score++;
-    if (/[^A-Za-z0-9]/.test(val)) score++;
-    const colors = ['#e8362a','#f0b429','#5b6ef5','#1fd670'];
-    bars.forEach((b,i) => {
-        document.getElementById(b).style.background = i < score ? colors[score-1] : 'var(--border)';
+/* Step Navigation */
+function goStep(n) {
+    const panels = document.querySelectorAll('.form-panel, .success-panel');
+    const dots = document.querySelectorAll('.step-dot');
+    
+    panels.forEach((p, i) => {
+        p.classList.remove('active');
+        if (i === n - 1) p.classList.add('active');
+    });
+    
+    dots.forEach((d, i) => {
+        d.classList.remove('active');
+        if (i < n - 1) d.classList.add('done');
+        if (i === n - 1) d.classList.add('active');
     });
 }
 
-// ── SLUG ──
-function generateSlug(val) {
-    const slug = val.toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-        .replace(/[^a-z0-9\s-]/g,'')
-        .trim().replace(/\s+/g,'-');
-    document.getElementById('f-slug').value = slug;
-    document.getElementById('slug-preview').textContent = `crowdplay.app/?venue=${slug || '...'}`;
-}
-
-// ── TYPE ──
-function selectType(el, type) {
-    document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedType = type;
-}
-
-// ── PLAN ──
-function selectPlan(el, plan) {
-    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedPlan = plan;
-}
-
-// ── COLOR ──
-function selectColor(color, el, isCustom = false) {
-    selectedColor = color;
-    document.getElementById('f-color').value = color;
-    if (!isCustom) {
-        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-        if (el) el.classList.add('selected');
+function goStep2() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const errorEl = document.getElementById('step1Error');
+    
+    errorEl.classList.remove('show');
+    errorEl.textContent = '';
+    
+    if (!email || !password) {
+        errorEl.textContent = 'Email y contraseña son requeridos';
+        errorEl.classList.add('show');
+        return;
     }
+    
+    if (password !== confirmPassword) {
+        errorEl.textContent = 'Las contraseñas no coinciden';
+        errorEl.classList.add('show');
+        return;
+    }
+    
+    if (password.length < 8) {
+        errorEl.textContent = 'La contraseña debe tener al menos 8 caracteres';
+        errorEl.classList.add('show');
+        return;
+    }
+    
+    goStep(2);
 }
 
-// ── LOGO ──
+function goStep3() {
+    const venueName = document.getElementById('venueName').value;
+    const city = document.getElementById('city').value;
+    const country = document.getElementById('country').value;
+    const errorEl = document.getElementById('step2Error');
+    
+    errorEl.classList.remove('show');
+    errorEl.textContent = '';
+    
+    if (!venueName || !city || !country) {
+        errorEl.textContent = 'Todos los campos son requeridos';
+        errorEl.classList.add('show');
+        return;
+    }
+    
+    goStep(3);
+}
+
+function goStep4() {
+    const logoUrl = document.getElementById('logoPreview').textContent;
+    const errorEl = document.getElementById('step3Error');
+    
+    errorEl.classList.remove('show');
+    errorEl.textContent = '';
+    
+    if (logoUrl === 'Sube tu logo') {
+        errorEl.textContent = 'Por favor sube un logo';
+        errorEl.classList.add('show');
+        return;
+    }
+    
+    goStep(4);
+}
+
+/* Color & Plan Selection */
+function selectColor(color, element) {
+    selectedColor = color;
+    document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+}
+
+function selectPlan(plan, element) {
+    selectedPlan = plan;
+    document.querySelectorAll('.plan-option').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+}
+
+/* Logo Upload */
 function handleLogoUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { toast('El logo no puede pesar más de 2MB', 'warning'); return; }
+    
+    logoFile = file;
     const reader = new FileReader();
-    reader.onload = ev => {
-        logoBase64 = ev.target.result;
-        const img = document.getElementById('logo-preview-img');
-        img.src = logoBase64; img.style.display = 'block';
-        document.getElementById('logo-upload-placeholder').style.display = 'none';
+    reader.onload = (event) => {
+        const preview = document.getElementById('logoPreview');
+        const img = new Image();
+        img.src = event.target.result;
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+        img.style.objectFit = 'contain';
+        preview.innerHTML = '';
+        preview.appendChild(img);
     };
     reader.readAsDataURL(file);
 }
 
-// ── STEP NAVIGATION ──
-function goStep(n) {
-    document.getElementById(`panel-${currentStep}`).classList.remove('active');
-    document.getElementById(`sdot-${currentStep}`).classList.remove('active');
-    document.getElementById(`sdot-${currentStep}`).classList.add('done');
-    currentStep = n;
-    document.getElementById(`panel-${n}`).classList.add('active');
-    document.querySelectorAll('.step-dot').forEach((d,i) => {
-        if (i+1 === n) { d.classList.add('active'); d.classList.remove('done'); }
-        else if (i+1 < n) { d.classList.remove('active'); d.classList.add('done'); }
-        else { d.classList.remove('active','done'); }
-    });
-    document.querySelector('.right').scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function fieldErr(id, errId, show) {
-    const input = document.getElementById(id);
-    const err   = document.getElementById(errId);
-    if (show) { input?.classList.add('error'); if(err) err.style.display = 'block'; }
-    else       { input?.classList.remove('error'); if(err) err.style.display = 'none'; }
-    return show;
-}
-
-function goStep2() {
-    const name  = document.getElementById('f-name').value.trim();
-    const surna = document.getElementById('f-surname').value.trim();
-    const email = document.getElementById('f-email').value.trim();
-    const phone = document.getElementById('f-phone').value.trim();
-    const pass  = document.getElementById('f-password').value;
-    const pass2 = document.getElementById('f-password2').value;
-    let ok = true;
-    if (fieldErr('f-name','err-name',!name)) ok = false;
-    if (fieldErr('f-surname','err-surname',!surna)) ok = false;
-    if (fieldErr('f-email','err-email',!email || !email.includes('@'))) ok = false;
-    if (fieldErr('f-password','err-password',pass.length < 8)) ok = false;
-    if (fieldErr('f-password2','err-password2',pass !== pass2)) ok = false;
-    if (ok) goStep(2);
-}
-
-function goStep3() {
-    const vname = document.getElementById('f-vname').value.trim();
-    const slug  = document.getElementById('f-slug').value.trim();
-    const city  = document.getElementById('f-city').value.trim();
-    const ytkey = document.getElementById('f-ytkey').value.trim();
-    let ok = true;
-    if (fieldErr('f-vname','err-vname',!vname)) ok = false;
-    if (fieldErr('f-slug','err-slug',!slug || !/^[a-z0-9-]+$/.test(slug))) ok = false;
-    if (fieldErr('f-city','err-city',!city)) ok = false;
-    if (fieldErr('f-ytkey','err-ytkey',!ytkey)) ok = false;
-    if (ok) goStep(3);
-}
-
-function goStep4() { goStep(4); }
-
-// ── SUBMIT ──
+/* Submit Registration */
 async function submitRegistration() {
-    const terms = document.getElementById('f-terms').checked;
-    if (fieldErr(null,'err-terms',!terms)) { return; }
-
-    const btn     = document.getElementById('btn-register');
-    const btnText = document.getElementById('btn-register-text');
-    const spinner = document.getElementById('btn-register-spinner');
-    btn.disabled = true; btnText.style.display = 'none'; spinner.style.display = 'block';
-
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const venueName = document.getElementById('venueName').value;
+    const city = document.getElementById('city').value;
+    const country = document.getElementById('country').value;
+    const terms = document.getElementById('terms').checked;
+    const errorEl = document.getElementById('step4Error');
+    
+    errorEl.classList.remove('show');
+    errorEl.textContent = '';
+    
+    if (!terms) {
+        errorEl.textContent = 'Debes aceptar los términos y condiciones';
+        errorEl.classList.add('show');
+        return;
+    }
+    
     try {
-        const email = document.getElementById('f-email').value.trim();
-        const pass  = document.getElementById('f-password').value;
-        const name  = document.getElementById('f-name').value.trim();
-        const surna = document.getElementById('f-surname').value.trim();
-        const phone = document.getElementById('f-phone').value.trim();
-        const vname = document.getElementById('f-vname').value.trim();
-        const slug  = document.getElementById('f-slug').value.trim();
-        const city  = document.getElementById('f-city').value.trim();
-        const country = document.getElementById('f-country').value;
-        const ytkey = document.getElementById('f-ytkey').value.trim();
-        const capacity = document.getElementById('f-capacity').value;
-        const source   = document.getElementById('f-source').value;
-        const coupon   = document.getElementById('f-coupon').value.trim().toUpperCase();
-        const trialUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-
-        // 1. Crear usuario en Firebase Auth
-        const cred = await auth.createUserWithEmailAndPassword(email, pass);
-        const uid  = cred.user.uid;
-
-        // 2. Guardar venue en Firestore
-        const venueRef = db.collection('venues').doc(slug);
-        const existing = await venueRef.get();
-        if (existing.exists) {
-            toast('Ese ID de venue ya está en uso, elige otro', 'error');
-            btn.disabled = false; btnText.style.display = 'block'; spinner.style.display = 'none';
-            goStep(2); return;
-        }
-
-        await venueRef.set({
-            name: vname, slug, type: selectedType,
-            city, country, ytApiKey: ytkey,
-            capacity, source, coupon,
-            color: selectedColor,
-            logo: logoBase64 || null,
+        // Create user
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const userId = userCredential.user.uid;
+        
+        // Create venue doc
+        const venueRef = await db.collection('venues').add({
+            name: venueName,
+            city: city,
+            country: country,
+            primaryColor: selectedColor,
             plan: selectedPlan,
-            status: 'trial',
-            trialUntil: firebase.firestore.Timestamp.fromDate(trialUntil),
-            ownerUid: uid, ownerEmail: email,
-            ownerName: `${name} ${surna}`, ownerPhone: phone,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            trialDays: 30,
+            trialStartDate: new Date(),
+            createdAt: new Date(),
+            ownerId: userId,
+            active: true
         });
-
-        // 3. Guardar perfil del owner como staff admin
-        await db.collection('venues').doc(slug)
-            .collection('staff_profiles').doc(uid).set({
-                uid, email, name, surname: surna, phone,
-                role: 'admin', createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-        // 4. Guardar en superadmin registry
-        await db.collection('superadmin').doc('registry')
-            .collection('venues').doc(slug).set({
-                slug, name: vname, ownerEmail: email, plan: selectedPlan,
-                status: 'trial', trialUntil: firebase.firestore.Timestamp.fromDate(trialUntil),
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-        registeredVenueId = slug;
-        showSuccess(slug, vname, `${name} ${surna}`);
-
-    } catch(e) {
-        console.error(e);
-        const msgs = {
-            'auth/email-already-in-use': 'Ese correo ya tiene una cuenta en CrowdPlay',
-            'auth/weak-password': 'La contraseña es demasiado débil',
-            'auth/invalid-email': 'El correo no es válido',
-        };
-        toast(msgs[e.code] || 'Error al crear la cuenta: ' + e.message, 'error');
-        btn.disabled = false; btnText.style.display = 'block'; spinner.style.display = 'none';
+        
+        window.venueId = venueRef.id;
+        
+        // Upload logo if exists
+        if (logoFile) {
+            const storageRef = firebase.storage().ref('venues/' + window.venueId + '/logo');
+            await storageRef.put(logoFile);
+        }
+        
+        // Create staff profile
+        await db.collection('venues').doc(window.venueId).collection('staff_profiles').add({
+            userId: userId,
+            name: venueName,
+            role: 'admin',
+            email: email,
+            createdAt: new Date(),
+            active: true
+        });
+        
+        // Show success
+        document.getElementById('venueUrl').textContent = window.location.origin + '?venue=' + window.venueId;
+        
+        const panels = document.querySelectorAll('.form-panel, .success-panel');
+        const dots = document.querySelectorAll('.step-dot');
+        
+        panels.forEach(p => p.classList.remove('active'));
+        dots.forEach(d => d.classList.remove('active', 'done'));
+        
+        document.querySelector('.success-panel').classList.add('active');
+        
+    } catch (error) {
+        console.error('Registration error:', error);
+        errorEl.textContent = error.message || 'Error en el registro';
+        errorEl.classList.add('show');
     }
 }
 
-// ── SUCCESS ──
-function showSuccess(slug, vname, ownerName) {
-    document.querySelectorAll('.form-panel').forEach(p => p.style.display = 'none');
-    document.getElementById('steps-nav')?.remove();
-    document.querySelector('.steps-nav').style.display = 'none';
-    document.getElementById('success-screen').style.display = 'block';
-
-    const base = window.location.origin;
-    document.getElementById('url-client').textContent = `${base}/index.html?venue=${slug}`;
-    document.getElementById('url-admin').textContent  = `${base}/admin.html?venue=${slug}`;
-    document.getElementById('url-tv').textContent     = `${base}/tv.html?venue=${slug}`;
-    document.getElementById('success-sub').textContent = `Bienvenido, ${ownerName.split(' ')[0]}. "${vname}" ya está en el sistema.`;
-}
-
-function copyUrl(id) {
-    const text = document.getElementById(id).textContent;
-    navigator.clipboard.writeText(text).then(() => toast('URL copiada', 'success'));
-}
-
-function goToAdmin() {
-    window.location.href = `admin.html?venue=${registeredVenueId}`;
-}
+// Initialize with default color selected
+window.addEventListener('load', () => {
+    const firstColor = document.querySelector('.color-option');
+    if (firstColor) firstColor.classList.add('selected');
+});
 </script>
+
 </body>
 </html>
