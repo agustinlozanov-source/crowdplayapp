@@ -413,7 +413,7 @@
                     const bannerEl = document.getElementById('banner');
                     const bannerImg = document.getElementById('banner-img');
                     if (activeBanner && bannerEl && bannerImg) {
-                        bannerImg.src = activeBanner.imageUrl || activeBanner.url || '';
+                        bannerImg.src = activeBanner.url || activeBanner.imageUrl || '';
                         bannerEl.style.display = 'block';
                     } else if (bannerEl) {
                         bannerEl.style.display = 'none';
@@ -433,6 +433,17 @@
 
                     const items   = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                     const playing = items.find(i => i.status === 'playing');
+
+                    // Dedicatoria
+                    if (playing && playing.showDedication && playing.dedication) {
+                        showBanner('dedication', {
+                            text: playing.dedication,
+                            from: playing.userName || null,
+                            song: playing.title || null
+                        });
+                    } else {
+                        hideBanner();
+                    }
 
                     if (playing && playing.videoId) {
                         loadVideo(playing.videoId);
