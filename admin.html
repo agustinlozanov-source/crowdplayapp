@@ -3740,7 +3740,8 @@ function syncVideo() {
     } catch(e) { console.error('syncVideo error:', e); }
 }
 function openTVTab() {
-    const tvUrl = window.location.origin + '/tv.html';
+    const venueParam = new URLSearchParams(window.location.search).get('venue') || appId;
+    const tvUrl = `${window.location.origin}/tv.html?venue=${venueParam}`;
     window.open(tvUrl, '_blank');
 }
 function copyRoleLink(mode) {

@@ -574,6 +574,19 @@
         };
         document.head.appendChild(s1);
 
+        /* ── FALLBACK INITIALIZATION ── */
+        document.addEventListener('DOMContentLoaded', () => {
+            if (firestoreDb) return; // Ya se inicializó
+            setTimeout(() => {
+                if (!firestoreDb && firebase && firebase.apps.length) {
+                    const db = firebase.firestore();
+                    firestoreDb = db;
+                    setupQueue(db);
+                    setupBannerListener(db);
+                }
+            }, 2000);
+        });
+
         /* ── FULLSCREEN ── */
         document.addEventListener('keydown', e => {
             if (e.key === 'f' || e.key === 'F') {
