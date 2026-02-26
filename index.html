@@ -2298,7 +2298,7 @@ async function initFirebase() {
                     // Sesión activa — cargar perfil con reintentos (evita race condition)
                     let profile = null;
                     for (let i = 0; i < 3; i++) {
-                        const doc = await db.collection(`venues/${appId}/data/client_profiles`).doc(user.uid).get();
+                        const doc = await db.collection(`venues/${appId}/client_profiles`).doc(user.uid).get();
                         if (doc.exists) { profile = doc; break; }
                         if (i < 2) await new Promise(r => setTimeout(r, 800));
                     }
@@ -2506,7 +2506,7 @@ function switchClientTab(tabName) {
 ═══════════════════════════════════════ */
 function startRealtimeSync() {
     // Forzar primera carga de waiter_calls
-    db.collection(`venues/${appId}/data/waiter_calls`).get().then(snap => {
+    db.collection(`venues/${appId}/waiter_calls`).get().then(snap => {
         const calls = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         updateWaiterView(calls);
         updateClientWaiterStatus(calls);
@@ -2518,7 +2518,7 @@ function startRealtimeSync() {
         }
     });
 
-    db.collection(`venues/${appId}/data/rocola_queue`).onSnapshot(snap => {
+    db.collection(`venues/${appId}/rocola_queue`).onSnapshot(snap => {
         let items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         items.sort((a, b) => ((b.votes || 0) - (a.votes || 0)) || ((a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0)));
         currentTrack = items.find(i => i.status === 'playing') || null;
@@ -2553,7 +2553,7 @@ function startRealtimeSync() {
         }
     });
 
-    db.collection(`venues/${appId}/data/waiter_calls`).onSnapshot(snap => {
+    db.collection(`venues/${appId}/waiter_calls`).onSnapshot(snap => {
         const calls = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         if (currentMode === 'waiter' || currentStaffPanel === 'waiter' || currentStaffPanel === 'history') {
             updateWaiterView(calls);
@@ -2775,7 +2775,7 @@ async function confirmOrder() {
     btn.innerHTML = '<div class="loading-spinner" style="width:18px;height:18px;margin:0 auto;"></div>';
     try {
         const u = JSON.parse(localStorage.getItem('rocola_user_v1'));
-        await db.collection(`venues/${appId}/data/rocola_queue`).add({
+        await db.collection(`venues/${appId}/rocola_queue`).add({
             ...selectedVideo,
             status: (!currentTrack && queue.length === 0) ? 'playing' : 'pending',
             votes: 1, userId: u.id, userName: u.name,
@@ -2786,7 +2786,7 @@ async function confirmOrder() {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         // Regalo: +3 Riffs por pedir canción
-        await db.collection(`venues/${appId}/data/client_profiles`).doc(u.id).update({
+        await db.collection(`venues/${appId}/client_profiles`).doc(u.id).update({
             credits: firebase.firestore.FieldValue.increment(3)
         });
         // CAMBIO 1: Guardar timestamp del último pedido
@@ -2864,7 +2864,7 @@ async function saveUserRegistration() {
         const uid = cred.user.uid;
 
         const profile = { name: n, surname: s, email: e, whatsapp: w, id: uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), credits: 0 };
-        await db.collection(`venues/${appId}/data/client_profiles`).doc(uid).set(profile);
+        await db.collection(`venues/${appId}/client_profiles`).doc(uid).set(profile);
         localStorage.setItem('rocola_user_v1', JSON.stringify({ name: n, surname: s, whatsapp: w, id: uid }));
 
         document.getElementById('registration-screen').classList.add('hidden');
@@ -2896,7 +2896,7 @@ async function saveTableNumber() {
     const u = JSON.parse(localStorage.getItem('rocola_user_v1') || 'null');
     if (u && db) {
         try {
-            await db.collection(`venues/${appId}/data/active_tables`).doc(`mesa_${table}`).set({
+            await db.collection(`venues/${appId}/active_tables`).doc(`mesa_${table}`).set({
                 table, userId: u.id, name: u.name,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
@@ -2929,7 +2929,7 @@ async function sendWaiterCall(table, type, extra = {}) {
     if (!isAppReady || !db) throw new Error('App no lista.');
     const u = JSON.parse(localStorage.getItem('rocola_user_v1'));
     if (!u?.id) throw new Error('Usuario no registrado.');
-    const docRef = await db.collection(`venues/${appId}/data/waiter_calls`).add({
+    const docRef = await db.collection(`venues/${appId}/waiter_calls`).add({
         userId: u.id, userName: u.name, table: String(table),
         type, status: 'sent',
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -3055,7 +3055,7 @@ async function sendBillRequest() {
    MODULE: WAITER VIEW (Staff)
 ═══════════════════════════════════════ */
 function loadWaiterInitialData() {
-    db.collection(`venues/${appId}/data/waiter_calls`).get()
+    db.collection(`venues/${appId}/waiter_calls`).get()
         .then(snap => updateWaiterView(snap.docs.map(d => ({ id: d.id, ...d.data() }))))
         .catch(err => console.error('Error loading waiter data:', err));
 }
@@ -3132,7 +3132,7 @@ function updateWaiterView(calls) {
 }
 
 async function updateCallStatus(id, newStatus) {
-    const ref = db.collection(`venues/${appId}/data/waiter_calls`).doc(id);
+    const ref = db.collection(`venues/${appId}/waiter_calls`).doc(id);
     const snap = await ref.get();
     const update = { status: newStatus };
     if (newStatus === 'completed') update.responseTime = Math.floor(Date.now() / 1000) - (snap.data().createdAt?.seconds || 0);
@@ -3159,18 +3159,18 @@ function updateAdminDashboard(items) {
 
 function sendCommand(cmd, extra = {}) {
     if (!currentTrack) return;
-    db.collection(`venues/${appId}/data/rocola_queue`).doc(currentTrack.id).update({ lastCommand: cmd, commandId: Math.random(), ...extra });
+    db.collection(`venues/${appId}/rocola_queue`).doc(currentTrack.id).update({ lastCommand: cmd, commandId: Math.random(), ...extra });
 }
 function handleDJToggle() {
     if (currentTrack) sendCommand(currentTrack.lastCommand === 'pause' ? 'play' : 'pause');
 }
 async function toggleDedication() {
-    if (currentTrack) await db.collection(`venues/${appId}/data/rocola_queue`).doc(currentTrack.id).update({ showDedication: !currentTrack.showDedication });
+    if (currentTrack) await db.collection(`venues/${appId}/rocola_queue`).doc(currentTrack.id).update({ showDedication: !currentTrack.showDedication });
 }
 async function skipSong() {
     await fadeOutPlayer();
-    if (currentTrack) await db.collection(`venues/${appId}/data/rocola_queue`).doc(currentTrack.id).delete();
-    if (queue.length > 0) await db.collection(`venues/${appId}/data/rocola_queue`).doc(queue[0].id).update({
+    if (currentTrack) await db.collection(`venues/${appId}/rocola_queue`).doc(currentTrack.id).delete();
+    if (queue.length > 0) await db.collection(`venues/${appId}/rocola_queue`).doc(queue[0].id).update({
         status: 'playing',
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         showDedication: false,
@@ -3209,7 +3209,7 @@ async function voteSong(id, v) {
         return;
     }
     
-    await db.collection(`venues/${appId}/data/rocola_queue`).doc(id).update({ votes: v + 1 });
+    await db.collection(`venues/${appId}/rocola_queue`).doc(id).update({ votes: v + 1 });
     
     // Guardar el voto en localStorage
     votes[id] = true;
@@ -3294,7 +3294,7 @@ function copyRoleLink(mode) {
    MODULE: ADMIN AUTH (CAMBIO 6)
 ═══════════════════════════════════════ */
 // SETUP: Para crear el superadmin inicial, ejecuta esto UNA VEZ en la consola de Firebase:
-// db.collection(`venues/${appId}/data/public/data/staff_profiles`).doc('UID_DEL_USUARIO').set({ email: 'admin@tucorreo.com', name: 'Admin', role: 'superadmin', createdAt: new Date() });
+// db.collection(`venues/${appId}/public/data/staff_profiles`).doc('UID_DEL_USUARIO').set({ email: 'admin@tucorreo.com', name: 'Admin', role: 'superadmin', createdAt: new Date() });
 
 async function adminLogin() {
     const email = document.getElementById('admin-email').value.trim();
@@ -3309,8 +3309,8 @@ async function adminLogin() {
         const user = auth.currentUser;
         // Leer rol del usuario desde Firestore
         console.log('UID encontrado:', user.uid);
-        console.log('Buscando en:', `venues/${appId}/data/staff_profiles`);
-        const profileDoc = await db.collection(`venues/${appId}/data/staff_profiles`).doc(user.uid).get();
+        console.log('Buscando en:', `venues/${appId}/staff_profiles`);
+        const profileDoc = await db.collection(`venues/${appId}/staff_profiles`).doc(user.uid).get();
         console.log('Documento existe:', profileDoc.exists);
         if (!profileDoc.exists) throw new Error('Perfil no encontrado. Contacta al administrador.');
         const profile = profileDoc.data();
@@ -3353,7 +3353,7 @@ async function createStaffAccount() {
         const newUid = cred.user.uid;
         await secondaryAuth.signOut();
         secondaryApp.delete();
-        await db.collection(`venues/${appId}/data/staff_profiles`).doc(newUid).set({
+        await db.collection(`venues/${appId}/staff_profiles`).doc(newUid).set({
             email, name, role,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             createdBy: auth.currentUser.uid
@@ -3371,7 +3371,7 @@ async function loadStaffList() {
     const listEl = document.getElementById('staff-list');
     if (!listEl) return;
     try {
-        const snap = await db.collection(`venues/${appId}/data/staff_profiles`).get();
+        const snap = await db.collection(`venues/${appId}/staff_profiles`).get();
         if (snap.empty) { listEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px 0;">Sin cuentas creadas</p>'; return; }
         const roleLabels = { waiter: 'Mesero', dj: 'DJ', analytics: 'Analytics', superadmin: 'Super Admin' };
         listEl.innerHTML = snap.docs.map(doc => {
@@ -3392,7 +3392,7 @@ async function loadStaffList() {
 async function deleteStaffAccount(uid) {
     if (!confirm('¿Eliminar esta cuenta? Esta acción no puede deshacerse.')) return;
     try {
-        await db.collection(`venues/${appId}/data/staff_profiles`).doc(uid).delete();
+        await db.collection(`venues/${appId}/staff_profiles`).doc(uid).delete();
         toast('Cuenta eliminada (el acceso de Firebase Auth debe borrarse manualmente en la consola).', 'info', 5000);
         loadStaffList();
     } catch(err) { toast('Error al eliminar: ' + err.message, 'error'); }
@@ -3454,8 +3454,8 @@ async function loadAnalyticsData() {
         const tsFrom = new Date(dateFrom * 1000);
         const tsTo = new Date(dateTo * 1000);
         const [waiterSnap, queueSnap] = await Promise.all([
-            db.collection(`venues/${appId}/data/waiter_calls`).where('createdAt','>=',tsFrom).where('createdAt','<',tsTo).get(),
-            db.collection(`venues/${appId}/data/rocola_queue`).where('createdAt','>=',tsFrom).where('createdAt','<',tsTo).get()
+            db.collection(`venues/${appId}/waiter_calls`).where('createdAt','>=',tsFrom).where('createdAt','<',tsTo).get(),
+            db.collection(`venues/${appId}/rocola_queue`).where('createdAt','>=',tsFrom).where('createdAt','<',tsTo).get()
         ]);
         console.log('Waiter calls:', waiterSnap.docs.length, 'Queue items:', queueSnap.docs.length);
         calculateMetrics(
@@ -3684,7 +3684,7 @@ async function loginUser() {
         if (authStateUnsubscribe) authStateUnsubscribe();
         await auth.setPersistence(persistence);
         const cred = await auth.signInWithEmailAndPassword(e, p);
-        const profile = await db.collection(`venues/${appId}/data/client_profiles`).doc(cred.user.uid).get();
+        const profile = await db.collection(`venues/${appId}/client_profiles`).doc(cred.user.uid).get();
         if (profile.exists) {
             localStorage.setItem('rocola_user_v1', JSON.stringify({ ...profile.data(), id: cred.user.uid }));
         }
@@ -3717,7 +3717,7 @@ async function showForgotPassword() {
 async function deleteMyQueue(songId) {
     if (!confirm('¿Eliminar tu canción de la cola?')) return;
     try {
-        await db.collection(`venues/${appId}/data/rocola_queue`).doc(songId).delete();
+        await db.collection(`venues/${appId}/rocola_queue`).doc(songId).delete();
         toast('Canción eliminada', 'info');
     } catch(e) { toast('Error al eliminar', 'error'); }
 }
@@ -3728,11 +3728,11 @@ async function boostSong(songId, currentIdx, type) {
     const costs = { up1: 15, top3: 40, next: 70 };
     const cost = costs[type];
     // Check balance from Firestore
-    const profileDoc = await db.collection(`venues/${appId}/data/client_profiles`).doc(u.id).get();
+    const profileDoc = await db.collection(`venues/${appId}/client_profiles`).doc(u.id).get();
     const balance = profileDoc.data()?.credits || 0;
     if (balance < cost) { toast(`Riffs insuficientes. Tienes ${balance}R, necesitas ${cost}R`, 'warning'); return; }
     // Calculate new createdAt to reposition
-    const snap = await db.collection(`venues/${appId}/data/rocola_queue`).where('status','==','pending').get();
+    const snap = await db.collection(`venues/${appId}/rocola_queue`).where('status','==','pending').get();
     const pending = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.createdAt?.seconds||0) - (b.createdAt?.seconds||0));
     if (!pending.length) return;
     let targetTime;
@@ -3749,8 +3749,8 @@ async function boostSong(songId, currentIdx, type) {
         targetTime = new Date(pending[currentIdx - 1].createdAt.toDate().getTime() - 1000);
     }
     // Deduct Riffs and reposition
-    await db.collection(`venues/${appId}/data/client_profiles`).doc(u.id).update({ credits: balance - cost });
-    await db.collection(`venues/${appId}/data/rocola_queue`).doc(songId).update({ createdAt: firebase.firestore.Timestamp.fromDate(targetTime) });
+    await db.collection(`venues/${appId}/client_profiles`).doc(u.id).update({ credits: balance - cost });
+    await db.collection(`venues/${appId}/rocola_queue`).doc(songId).update({ createdAt: firebase.firestore.Timestamp.fromDate(targetTime) });
     // Update local display
     const balEl = document.getElementById('client-riffs-balance');
     if (balEl) balEl.innerText = (balance - cost) + ' Riffs';
@@ -3801,7 +3801,7 @@ async function sendChatTrigger(type, text, subtext) {
     const u = JSON.parse(localStorage.getItem('rocola_user_v1') || 'null');
     if (!table || !u) { toast('Primero asigna tu mesa', 'warning'); return; }
     try {
-        const snap = await db.collection(`venues/${appId}/data/active_tables`).get();
+        const snap = await db.collection(`venues/${appId}/active_tables`).get();
         const others = snap.docs.map(d => d.data()).filter(t => t.table !== table);
         showChatTargetPicker(type, text, subtext, table, others);
     } catch(e) { toast('Error al cargar mesas', 'error'); }
@@ -3832,7 +3832,7 @@ async function confirmSendChat(type, text, subtext, toTable) {
     const u = JSON.parse(localStorage.getItem('rocola_user_v1') || 'null');
     const msg = text.replace('{me}', table);
     try {
-        await db.collection(`venues/${appId}/data/chat_messages`).add({
+        await db.collection(`venues/${appId}/chat_messages`).add({
             type, text: msg, subtext,
             fromTable: table, fromName: u.name, fromUserId: u.id,
             toTable: toTable || null,
@@ -3847,7 +3847,7 @@ async function replyChatMessage(msgId, replyText) {
     const u = JSON.parse(localStorage.getItem('rocola_user_v1') || 'null');
     if (!table || !u) return;
     try {
-        await db.collection(`venues/${appId}/data/chat_messages`).doc(msgId).update({
+        await db.collection(`venues/${appId}/chat_messages`).doc(msgId).update({
             replies: firebase.firestore.FieldValue.arrayUnion({
                 text: replyText, fromTable: table,
                 fromName: u.name, at: Date.now()
@@ -3860,7 +3860,7 @@ function startChatListener() {
     if (chatListener) return;
     const u = JSON.parse(localStorage.getItem('rocola_user_v1') || 'null');
     const myId = u?.id;
-    chatListener = db.collection(`venues/${appId}/data/chat_messages`)
+    chatListener = db.collection(`venues/${appId}/chat_messages`)
         .limit(50)
         .onSnapshot(snap => {
             const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() }))

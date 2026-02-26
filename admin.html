@@ -1488,8 +1488,8 @@
                 if (dragSrcId === s.id) return;
                 const src = queue.find(x => x.id === dragSrcId);
                 if (!src) return;
-                await db.collection(`venues/${appId}/data/rocola_queue`).doc(src.id).update({ createdAt: s.createdAt });
-                await db.collection(`venues/${appId}/data/rocola_queue`).doc(s.id).update({ createdAt: src.createdAt });
+                await db.collection(`venues/${appId}/rocola_queue`).doc(src.id).update({ createdAt: s.createdAt });
+                await db.collection(`venues/${appId}/rocola_queue`).doc(s.id).update({ createdAt: src.createdAt });
             });
             container.appendChild(row);
         });
@@ -1505,11 +1505,11 @@
         const targetIdx = idx + direction;
         if (targetIdx < 0 || targetIdx >= queue.length) return;
         const a = queue[idx], b = queue[targetIdx];
-        await db.collection(`venues/${appId}/data/rocola_queue`).doc(a.id).update({ createdAt: b.createdAt });
-        await db.collection(`venues/${appId}/data/rocola_queue`).doc(b.id).update({ createdAt: a.createdAt });
+        await db.collection(`venues/${appId}/rocola_queue`).doc(a.id).update({ createdAt: b.createdAt });
+        await db.collection(`venues/${appId}/rocola_queue`).doc(b.id).update({ createdAt: a.createdAt });
     }
     async function removeQueueItem(id) {
-        await db.collection(`venues/${appId}/data/rocola_queue`).doc(id).delete();
+        await db.collection(`venues/${appId}/rocola_queue`).doc(id).delete();
     }
 </script>
 
@@ -2878,7 +2878,7 @@ function switchClientTab(tabName) {
    MODULE: REALTIME SYNC
 ═══════════════════════════════════════ */
 function startRealtimeSync() {
-    db.collection(`venues/${appId}/data/rocola_queue`).onSnapshot(snap => {
+    db.collection(`venues/${appId}/rocola_queue`).onSnapshot(snap => {
         let items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         items.sort((a, b) => ((b.votes || 0) - (a.votes || 0)) || ((a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0)));
         currentTrack = items.find(i => i.status === 'playing') || null;
@@ -2917,7 +2917,7 @@ function startRealtimeSync() {
         }
     });
 
-    db.collection(`venues/${appId}/data/waiter_calls`).onSnapshot(snap => {
+    db.collection(`venues/${appId}/waiter_calls`).onSnapshot(snap => {
         const calls = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         if (currentMode === 'waiter' || currentStaffPanel === 'waiter' || currentStaffPanel === 'history') {
             updateWaiterView(calls);
@@ -3118,7 +3118,7 @@ async function confirmOrder() {
     btn.innerHTML = '<div class="loading-spinner" style="width:18px;height:18px;margin:0 auto;"></div>';
     try {
         const u = JSON.parse(localStorage.getItem('rocola_user_v1'));
-        await db.collection(`venues/${appId}/data/rocola_queue`).add({
+        await db.collection(`venues/${appId}/rocola_queue`).add({
             ...selectedVideo,
             status: (!currentTrack && queue.length === 0) ? 'playing' : 'pending',
             votes: 1, userId: u.id, userName: u.name,
@@ -3214,7 +3214,7 @@ async function sendWaiterCall(table, type, extra = {}) {
     if (!isAppReady || !db) throw new Error('App no lista.');
     const u = JSON.parse(localStorage.getItem('rocola_user_v1'));
     if (!u?.id) throw new Error('Usuario no registrado.');
-    const docRef = await db.collection(`venues/${appId}/data/waiter_calls`).add({
+    const docRef = await db.collection(`venues/${appId}/waiter_calls`).add({
         userId: u.id, userName: u.name, table: String(table),
         type, status: 'sent',
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -3340,7 +3340,7 @@ async function sendBillRequest() {
    MODULE: WAITER VIEW (Staff)
 ═══════════════════════════════════════ */
 function loadWaiterInitialData() {
-    db.collection(`venues/${appId}/data/waiter_calls`).get()
+    db.collection(`venues/${appId}/waiter_calls`).get()
         .then(snap => updateWaiterView(snap.docs.map(d => ({ id: d.id, ...d.data() }))))
         .catch(err => console.error('Error loading waiter data:', err));
 }
@@ -3417,7 +3417,7 @@ function updateWaiterView(calls) {
 }
 
 async function updateCallStatus(id, newStatus) {
-    const ref = db.collection(`venues/${appId}/data/waiter_calls`).doc(id);
+    const ref = db.collection(`venues/${appId}/waiter_calls`).doc(id);
     const snap = await ref.get();
     const update = { status: newStatus };
     if (newStatus === 'completed') update.responseTime = Math.floor(Date.now() / 1000) - (snap.data().createdAt?.seconds || 0);
@@ -3444,7 +3444,7 @@ function updateAdminDashboard(items) {
 
 function sendCommand(cmd, extra = {}) {
     if (!currentTrack) return;
-    db.collection(`venues/${appId}/data/rocola_queue`).doc(currentTrack.id).update({ lastCommand: cmd, commandId: Math.random(), ...extra });
+    db.collection(`venues/${appId}/rocola_queue`).doc(currentTrack.id).update({ lastCommand: cmd, commandId: Math.random(), ...extra });
     currentTrack.lastCommand = cmd;
     updatePlayIcon();
 }
@@ -3498,7 +3498,7 @@ function startProgressBar() {
 async function toggleDedication() {
     if (!currentTrack) return;
     const newVal = !currentTrack.showDedication;
-    await db.collection(`venues/${appId}/data/rocola_queue`).doc(currentTrack.id).update({ showDedication: newVal });
+    await db.collection(`venues/${appId}/rocola_queue`).doc(currentTrack.id).update({ showDedication: newVal });
     const btn = document.getElementById('toggle-dedication-btn');
     if (btn) {
         btn.style.background   = newVal ? 'rgba(91,110,245,0.2)' : '';
@@ -3511,7 +3511,7 @@ async function skipSong() {
     const trackToDelete = currentTrack;
     const nextTrack = queue.length > 0 ? queue[0] : null;
     if (nextTrack) {
-        await db.collection(`venues/${appId}/data/rocola_queue`).doc(nextTrack.id).update({
+        await db.collection(`venues/${appId}/rocola_queue`).doc(nextTrack.id).update({
             status: 'playing',
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             showDedication: false,
@@ -3519,7 +3519,7 @@ async function skipSong() {
         });
     }
     if (trackToDelete) {
-        await db.collection(`venues/${appId}/data/rocola_queue`).doc(trackToDelete.id).delete();
+        await db.collection(`venues/${appId}/rocola_queue`).doc(trackToDelete.id).delete();
     }
 }
 
@@ -3554,7 +3554,7 @@ async function voteSong(id, v) {
         return;
     }
     
-    await db.collection(`venues/${appId}/data/rocola_queue`).doc(id).update({ votes: v + 1 });
+    await db.collection(`venues/${appId}/rocola_queue`).doc(id).update({ votes: v + 1 });
     
     // Guardar el voto en localStorage
     votes[id] = true;
@@ -3646,7 +3646,7 @@ async function djAddToQueue(videoId, title) {
         
         // Agregar a la cola
         const queueId = 'queue_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        await db.collection(`venues/${appId}/data/rocola_queue`).doc(queueId).set({
+        await db.collection(`venues/${appId}/rocola_queue`).doc(queueId).set({
             id: queueId,
             videoId: videoId,
             title: title.replace(/&#39;/g, "'").replace(/&quot;/g, '"'),
@@ -3752,7 +3752,7 @@ function copyRoleLink(mode) {
    MODULE: ADMIN AUTH (CAMBIO 6)
 ═══════════════════════════════════════ */
 // SETUP: Para crear el superadmin inicial, ejecuta esto UNA VEZ en la consola de Firebase:
-// db.collection(`venues/${appId}/data/staff_profiles`).doc('UID_DEL_USUARIO').set({ email: 'admin@tucorreo.com', name: 'Admin', role: 'superadmin', createdAt: new Date() });
+// db.collection(`venues/${appId}/staff_profiles`).doc('UID_DEL_USUARIO').set({ email: 'admin@tucorreo.com', name: 'Admin', role: 'superadmin', createdAt: new Date() });
 
 async function adminLogin() {
     const email = document.getElementById('admin-email').value.trim();
@@ -3767,8 +3767,8 @@ async function adminLogin() {
         const user = auth.currentUser;
         // Leer rol del usuario desde Firestore
         console.log('UID encontrado:', user.uid);
-        console.log('Buscando en:', `venues/${appId}/data/staff_profiles`);
-        const profileDoc = await db.collection(`venues/${appId}/data/staff_profiles`).doc(user.uid).get();
+        console.log('Buscando en:', `venues/${appId}/staff_profiles`);
+        const profileDoc = await db.collection(`venues/${appId}/staff_profiles`).doc(user.uid).get();
         console.log('Documento existe:', profileDoc.exists);
         if (!profileDoc.exists) throw new Error('Perfil no encontrado. Contacta al administrador.');
         const profile = profileDoc.data();
@@ -3811,7 +3811,7 @@ async function createStaffAccount() {
         const newUid = cred.user.uid;
         await secondaryAuth.signOut();
         secondaryApp.delete();
-        await db.collection(`venues/${appId}/data/staff_profiles`).doc(newUid).set({
+        await db.collection(`venues/${appId}/staff_profiles`).doc(newUid).set({
             email, name, role,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             createdBy: auth.currentUser.uid
@@ -3829,7 +3829,7 @@ async function loadStaffList() {
     const listEl = document.getElementById('staff-list');
     if (!listEl) return;
     try {
-        const snap = await db.collection(`venues/${appId}/data/staff_profiles`).get();
+        const snap = await db.collection(`venues/${appId}/staff_profiles`).get();
         if (snap.empty) { listEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px 0;">Sin cuentas creadas</p>'; return; }
         const roleLabels = { waiter: 'Mesero', dj: 'DJ', analytics: 'Analytics', superadmin: 'Super Admin' };
         listEl.innerHTML = snap.docs.map(doc => {
@@ -3850,7 +3850,7 @@ async function loadStaffList() {
 async function deleteStaffAccount(uid) {
     if (!confirm('¿Eliminar esta cuenta? Esta acción no puede deshacerse.')) return;
     try {
-        await db.collection(`venues/${appId}/data/staff_profiles`).doc(uid).delete();
+        await db.collection(`venues/${appId}/staff_profiles`).doc(uid).delete();
         toast('Cuenta eliminada (el acceso de Firebase Auth debe borrarse manualmente en la consola).', 'info', 5000);
         loadStaffList();
     } catch(err) { toast('Error al eliminar: ' + err.message, 'error'); }
@@ -3912,8 +3912,8 @@ async function loadAnalyticsData() {
         const tsFrom = new Date(dateFrom * 1000);
         const tsTo = new Date(dateTo * 1000);
         const [waiterSnap, queueSnap] = await Promise.all([
-            db.collection(`venues/${appId}/data/waiter_calls`).where('createdAt','>=',tsFrom).where('createdAt','<',tsTo).get(),
-            db.collection(`venues/${appId}/data/rocola_queue`).where('createdAt','>=',tsFrom).where('createdAt','<',tsTo).get()
+            db.collection(`venues/${appId}/waiter_calls`).where('createdAt','>=',tsFrom).where('createdAt','<',tsTo).get(),
+            db.collection(`venues/${appId}/rocola_queue`).where('createdAt','>=',tsFrom).where('createdAt','<',tsTo).get()
         ]);
         console.log('Waiter calls:', waiterSnap.docs.length, 'Queue items:', queueSnap.docs.length);
         calculateMetrics(
@@ -4042,7 +4042,7 @@ let riffsSelectedUser = null;
 async function searchRiffsUser(query) {
     const container = document.getElementById('riffs-search-results');
     if (!query || query.length < 2) { container.innerHTML = ''; return; }
-    const snap = await db.collection(`venues/${appId}/data/client_profiles`).get();
+    const snap = await db.collection(`venues/${appId}/client_profiles`).get();
     const results = snap.docs
         .map(d => ({ id: d.id, ...d.data() }))
         .filter(u => (u.name + ' ' + (u.surname||'')).toLowerCase().includes(query.toLowerCase()));
@@ -4078,7 +4078,7 @@ async function chargeRiffs(pack) {
     const packs = { chico: 80, medio: 180, grande: 300 };
     const amount = packs[pack];
     const newBalance = (riffsSelectedUser.balance || 0) + amount;
-    await db.collection(`venues/${appId}/data/client_profiles`).doc(riffsSelectedUser.id).update({ credits: newBalance });
+    await db.collection(`venues/${appId}/client_profiles`).doc(riffsSelectedUser.id).update({ credits: newBalance });
     riffsSelectedUser.balance = newBalance;
     document.getElementById('riffs-user-balance').innerText = newBalance;
     toast(`+${amount} Riffs cargados a ${riffsSelectedUser.name}`, 'success');
@@ -4111,7 +4111,7 @@ async function saveBanner() {
     if (!bannerNewDataUrl) { toast('Selecciona una imagen primero', 'warning'); return; }
     const name = document.getElementById('banner-name-input')?.value.trim() || 'Banner';
     const id = 'banner_' + Date.now();
-    await db.collection(`venues/${appId}/data/banners`).doc(id).set({
+    await db.collection(`venues/${appId}/banners`).doc(id).set({
         id, name,
         url: bannerNewDataUrl,
         active: false,
@@ -4129,7 +4129,7 @@ async function saveBanner() {
 async function loadBanners() {
     const container = document.getElementById('banner-list');
     if (!container) return;
-    const snap = await db.collection(`venues/${appId}/data/banners`).get();
+    const snap = await db.collection(`venues/${appId}/banners`).get();
     if (snap.empty) {
         container.innerHTML = '<div style="font-size:0.72rem;color:var(--text-muted);text-align:center;padding:12px 0;">Sin banners guardados</div>';
         return;
@@ -4159,14 +4159,14 @@ async function loadBanners() {
 async function toggleBanner(id, activate) {
     try {
         const batch = db.batch();
-        const snap = await db.collection(`venues/${appId}/data/banners`).get();
+        const snap = await db.collection(`venues/${appId}/banners`).get();
         snap.docs.forEach(doc => batch.update(doc.ref, { active: false }));
         if (activate) {
-            batch.update(db.collection(`venues/${appId}/data/banners`).doc(id), { active: true });
+            batch.update(db.collection(`venues/${appId}/banners`).doc(id), { active: true });
         }
         await batch.commit();
-        const bannerDoc = activate ? await db.collection(`venues/${appId}/data/banners`).doc(id).get() : null;
-        await db.collection(`venues/${appId}/data/rocola_settings`).doc('banner').set({
+        const bannerDoc = activate ? await db.collection(`venues/${appId}/banners`).doc(id).get() : null;
+        await db.collection(`venues/${appId}/rocola_settings`).doc('banner').set({
             active: activate,
             url: activate && bannerDoc ? bannerDoc.data().url : '',
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -4179,10 +4179,10 @@ async function toggleBanner(id, activate) {
 async function deleteBanner(id) {
     if (!confirm('¿Eliminar este banner?')) return;
     try {
-        await db.collection(`venues/${appId}/data/banners`).doc(id).delete();
-        const setting = await db.collection(`venues/${appId}/data/rocola_settings`).doc('banner').get();
+        await db.collection(`venues/${appId}/banners`).doc(id).delete();
+        const setting = await db.collection(`venues/${appId}/rocola_settings`).doc('banner').get();
         if (setting.exists && setting.data().active) {
-            await db.collection(`venues/${appId}/data/rocola_settings`).doc('banner').set({ active: false, url: '', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            await db.collection(`venues/${appId}/rocola_settings`).doc('banner').set({ active: false, url: '', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         }
         loadBanners();
         toast('Banner eliminado', 'info');
@@ -4431,7 +4431,7 @@ async function saveCustomBanner() {
     const id = 'banner_' + Date.now();
     
     try {
-        await db.collection(`venues/${appId}/data/banners`).doc(id).set({
+        await db.collection(`venues/${appId}/banners`).doc(id).set({
             id, name,
             url: dataUrl,
             active: false,
@@ -4534,7 +4534,7 @@ async function saveSampler() {
     if (!name) { toast('Ponle nombre al sampler', 'warning'); return; }
     if (!samplerAudioData) { toast('Selecciona o graba un audio', 'warning'); return; }
     try {
-        await db.collection(`venues/${appId}/data/samplers`).add({
+        await db.collection(`venues/${appId}/samplers`).add({
             name, color: samplerColor, audioData: samplerAudioData,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -4550,7 +4550,7 @@ async function saveSampler() {
 async function loadSamplers() {
     const container = document.getElementById('sampler-list');
     if (!container) return;
-    const snap = await db.collection(`venues/${appId}/data/samplers`).get();
+    const snap = await db.collection(`venues/${appId}/samplers`).get();
     if (snap.empty) {
         container.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:0.72rem;padding:12px;">Sin samplers guardados</div>';
         return;
@@ -4570,7 +4570,7 @@ async function loadSamplers() {
 
 let samplerAudioCache = {};
 async function testSampler(id) {
-    const snap = await db.collection(`venues/${appId}/data/samplers`).doc(id).get();
+    const snap = await db.collection(`venues/${appId}/samplers`).doc(id).get();
     if (!snap.exists) return;
     playSamplerAudio(snap.data().audioData);
 }
@@ -4596,7 +4596,7 @@ async function playSamplerAudio(audioData) {
 
 async function deleteSampler(id) {
     if (!confirm('¿Eliminar este sampler?')) return;
-    await db.collection(`venues/${appId}/data/samplers`).doc(id).delete();
+    await db.collection(`venues/${appId}/samplers`).doc(id).delete();
     loadSamplers();
     toast('Sampler eliminado', 'info');
 }
@@ -4627,7 +4627,7 @@ async function fireSampler(id) {
         playSamplerAudio(samplerCache[id]);
         return;
     }
-    const snap = await db.collection(`venues/${appId}/data/samplers`).doc(id).get();
+    const snap = await db.collection(`venues/${appId}/samplers`).doc(id).get();
     if (!snap.exists) return;
     samplerCache[id] = snap.data().audioData;
     playSamplerAudio(samplerCache[id]);
@@ -4635,7 +4635,7 @@ async function fireSampler(id) {
 
 // ── ADMIN CHAT ──
 function startAdminChatListener() {
-    db.collection(`venues/${appId}/data/chat_messages`)
+    db.collection(`venues/${appId}/chat_messages`)
         .limit(50)
         .onSnapshot(snap => {
             const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() }))
@@ -4671,7 +4671,7 @@ function renderAdminChat(msgs) {
 
 async function clearChatMessages() {
     if (!confirm('¿Limpiar todos los mensajes del chat?')) return;
-    const snap = await db.collection(`venues/${appId}/data/chat_messages`).get();
+    const snap = await db.collection(`venues/${appId}/chat_messages`).get();
     const batch = db.batch();
     snap.docs.forEach(d => batch.delete(d.ref));
     await batch.commit();

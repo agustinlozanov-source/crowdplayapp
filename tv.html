@@ -405,7 +405,7 @@
 
         /* ── FIRESTORE LISTENER ── */
         function setupBannerListener(db) {
-            db.collection(`venues/${firestoreAppId}/data/rocola_settings`)
+            db.collection(`venues/${firestoreAppId}/rocola_settings`)
                 .doc('banner')
                 .onSnapshot(doc => {
                     if (!doc.exists) return;
@@ -419,7 +419,7 @@
         }
 
         function setupQueue(db) {
-            db.collection(`venues/${firestoreAppId}/data/rocola_queue`)
+            db.collection(`venues/${firestoreAppId}/rocola_queue`)
                 .onSnapshot(snap => {
                     setStatus('connected', 'En vivo');
                     if (snap.empty) {
@@ -497,7 +497,7 @@
             try {
                 await fadeOutTV();
                 const snap = await firestoreDb
-                    .collection(`venues/${firestoreAppId}/data/rocola_queue`)
+                    .collection(`venues/${firestoreAppId}/rocola_queue`)
                     .get();
                 if (snap.empty) { showStandby(true); return; }
 
@@ -512,7 +512,7 @@
 
                 if (pending.length > 0) {
                     await firestoreDb
-                        .collection(`venues/${firestoreAppId}/data/rocola_queue`)
+                        .collection(`venues/${firestoreAppId}/rocola_queue`)
                         .doc(pending[0].id)
                         .update({ status: 'playing', lastCommand: 'play', showDedication: false });
                 } else {
@@ -520,7 +520,7 @@
                 }
                 if (playing) {
                     await firestoreDb
-                        .collection(`venues/${firestoreAppId}/data/rocola_queue`)
+                        .collection(`venues/${firestoreAppId}/rocola_queue`)
                         .doc(playing.id)
                         .delete();
                 }
