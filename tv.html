@@ -340,7 +340,9 @@
             }
 
             banner.classList.add('visible');
-            bannerTimeout = setTimeout(() => hideBanner(), duration);
+            if (duration > 0) {
+                bannerTimeout = setTimeout(() => hideBanner(), duration);
+            }
         }
 
         function hideBanner() {
@@ -410,13 +412,10 @@
                     const activeBanner = snap.docs
                         .map(d => ({ id: d.id, ...d.data() }))
                         .find(b => b.active);
-                    const bannerEl = document.getElementById('banner');
-                    const bannerImg = document.getElementById('banner-img');
-                    if (activeBanner && bannerEl && bannerImg) {
-                        bannerImg.src = activeBanner.url || activeBanner.imageUrl || '';
-                        bannerEl.style.display = 'block';
-                    } else if (bannerEl) {
-                        bannerEl.style.display = 'none';
+                    if (activeBanner) {
+                        showBanner('ad', { url: activeBanner.url, duration: 0 });
+                    } else {
+                        hideBanner();
                     }
                 }, err => console.warn('banner listener:', err.message));
         }
