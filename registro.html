@@ -1126,7 +1126,7 @@ async function submitRegistration() {
 
         // 3. Guardar perfil del owner como staff admin
         await db.collection('venues').doc(slug)
-            .collection('staff').doc(uid).set({
+            .collection('staff_profiles').doc(uid).set({
                 uid, email, name, surname: surna, phone,
                 role: 'admin', createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
