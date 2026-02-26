@@ -405,17 +405,20 @@
 
         /* ── FIRESTORE LISTENER ── */
         function setupBannerListener(db) {
-            db.collection(`venues/${firestoreAppId}/rocola_settings`)
-                .doc('banner')
-                .onSnapshot(doc => {
-                    if (!doc.exists) return;
-                    const data = doc.data();
-                    if (data.active && data.url) {
-                        showBanner('ad', { url: data.url, duration: 999999 });
-                    } else {
-                        hideBanner();
+            db.collection(`venues/${firestoreAppId}/banners`)
+                .onSnapshot(snap => {
+                    const activeBanner = snap.docs
+                        .map(d => ({ id: d.id, ...d.data() }))
+                        .find(b => b.active);
+                    const bannerEl = document.getElementById('banner');
+                    const bannerImg = document.getElementById('banner-img');
+                    if (activeBanner && bannerEl && bannerImg) {
+                        bannerImg.src = activeBanner.imageUrl || activeBanner.url || '';
+                        bannerEl.style.display = 'block';
+                    } else if (bannerEl) {
+                        bannerEl.style.display = 'none';
                     }
-                });
+                }, err => console.warn('banner listener:', err.message));
         }
 
         function setupQueue(db) {
