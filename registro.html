@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CrowdPlay — Empieza tu prueba gratuita</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Barlow:wght@400;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -93,12 +93,18 @@ html, body {
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
 
 .left-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 3rem; font-weight: 800; line-height: 1.1;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4.8rem; font-weight: 400; line-height: 0.85;
     letter-spacing: -0.03em; color: var(--text);
     margin-bottom: 20px;
+    text-transform: uppercase;
 }
-.left-title span { color: var(--red); }
+.left-title span {
+    background: linear-gradient(135deg, var(--red), var(--indigo), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
 .left-desc {
     font-size: 1rem; color: var(--sub); line-height: 1.7;
@@ -106,14 +112,14 @@ html, body {
 }
 
 .trial-badge {
-    background: rgba(240,180,41,0.08);
-    border: 1px solid rgba(240,180,41,0.2);
-    border-radius: 16px; padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(240,180,41,0.15), rgba(240,180,41,0.05));
+    border: 1px solid rgba(240,180,41,0.3);
+    border-radius: 16px; padding: 12px 24px;
     margin-bottom: 40px;
 }
 .trial-badge-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.4rem; font-weight: 800; color: var(--amber);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; font-weight: 400; color: var(--amber);
     margin-bottom: 4px;
 }
 .trial-badge-sub { font-size: 0.82rem; color: var(--sub); }
@@ -145,12 +151,12 @@ html, body {
 
 /* ── STEPS NAV ── */
 .steps-nav {
-    display: flex; align-items: center; gap: 0;
+    display: flex; align-items: center; gap: 16px;
     margin-bottom: 40px; position: relative;
 }
 .steps-nav::before {
     content: ''; position: absolute;
-    top: 14px; left: 14px; right: 14px; height: 1px;
+    top: 14px; left: 14px; right: 100px; height: 1px;
     background: var(--border);
 }
 .step-dot {
@@ -182,14 +188,27 @@ html, body {
 }
 .step-dot.done .step-label { color: var(--green); }
 
+.btn-reset-form {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px; font-size: 0.7rem; font-weight: 600;
+    color: var(--sub); background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; cursor: pointer; transition: all 0.2s;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    white-space: nowrap; margin-left: auto; z-index: 2; position: relative;
+}
+.btn-reset-form:hover {
+    color: var(--muted); border-color: var(--border-mid);
+    background: rgba(255,255,255,0.03);
+}
+
 /* ── FORM PANELS ── */
 .form-panel { display: none; animation: fadeUp 0.35s ease; }
 .form-panel.active { display: block; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
 .panel-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.6rem; font-weight: 800; color: var(--text);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; font-weight: 400; color: var(--text);
     margin-bottom: 6px; letter-spacing: -0.02em;
 }
 .panel-sub { font-size: 0.88rem; color: var(--sub); margin-bottom: 32px; line-height: 1.5; }
@@ -259,19 +278,19 @@ html, body {
 .api-helper-title {
     font-size: 0.72rem; font-weight: 700; color: var(--amber);
     text-transform: uppercase; letter-spacing: 0.08em;
-    margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
 }
-.api-steps { display: flex; flex-direction: column; gap: 6px; }
+.api-steps { display: flex; flex-direction: column; gap: 10px; }
 .api-step {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 0.78rem; color: var(--sub); line-height: 1.4;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.78rem; color: var(--sub); line-height: 1.5;
+    text-align: left;
 }
 .api-step-num {
-    width: 18px; height: 18px; border-radius: 50%;
+    width: 20px; height: 20px; border-radius: 50%;
     background: rgba(240,180,41,0.15); border: 1px solid rgba(240,180,41,0.3);
-    color: var(--amber); font-size: 0.6rem; font-weight: 800;
+    color: var(--amber); font-size: 0.65rem; font-weight: 800;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    margin-top: 1px;
 }
 .api-link {
     color: var(--indigo); text-decoration: none;
@@ -326,8 +345,8 @@ html, body {
     display: flex; align-items: center; justify-content: center;
 }
 .plan-name {
-    font-family: 'Syne', sans-serif; font-size: 0.88rem;
-    font-weight: 800; margin-bottom: 2px; color: var(--text);
+    font-family: 'Bebas Neue', sans-serif; font-size: 0.88rem;
+    font-weight: 400; margin-bottom: 2px; color: var(--text);
 }
 .plan-price { font-size: 0.72rem; color: var(--muted); margin-bottom: 8px; }
 .plan-features { display: flex; flex-direction: column; gap: 3px; }
@@ -349,9 +368,9 @@ html, body {
 /* ── SUBMIT BTN ── */
 .btn-next {
     width: 100%; padding: 15px; border-radius: 14px; border: none;
-    background: linear-gradient(135deg, var(--indigo), var(--purple));
-    color: white; font-family: 'Syne', sans-serif;
-    font-size: 0.92rem; font-weight: 700; cursor: pointer;
+    background: linear-gradient(135deg, var(--red), var(--indigo), var(--purple));
+    color: white; font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; font-weight: 400; cursor: pointer;
     letter-spacing: 0.04em; text-transform: uppercase;
     transition: all 0.2s; margin-top: 8px;
     display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -390,8 +409,8 @@ html, body {
 }
 @keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
 .success-title {
-    font-family: 'Syne', sans-serif; font-size: 1.8rem;
-    font-weight: 800; color: var(--text); margin-bottom: 8px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
+    font-weight: 400; color: var(--text); margin-bottom: 8px;
 }
 .success-sub { font-size: 0.9rem; color: var(--sub); line-height: 1.6; }
 
@@ -461,10 +480,7 @@ html, body {
     <!-- ── LEFT PANEL ── -->
     <div class="left">
         <a class="logo" href="#">
-            <div class="logo-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-            </div>
-            CrowdPlay
+            <img src="logo.png" alt="CrowdPlay" style="height: 52px; width: auto;">
         </a>
 
         <div class="left-hero">
@@ -481,27 +497,27 @@ html, body {
 
             <div class="features-list">
                 <div class="feature-item">
-                    <div class="feature-icon">🎵</div>
+                    <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></div>
                     Cola de canciones en tiempo real con votación
                 </div>
                 <div class="feature-item">
-                    <div class="feature-icon">🎤</div>
+                    <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg></div>
                     Karaoke integrado con dedicatorias en pantalla
                 </div>
                 <div class="feature-item">
-                    <div class="feature-icon">💬</div>
+                    <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
                     Chat social entre mesas con disparadores rápidos
                 </div>
                 <div class="feature-item">
-                    <div class="feature-icon">🎛️</div>
+                    <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="8" width="4" height="12" rx="1"/><rect x="8" y="4" width="4" height="16" rx="1"/><rect x="14" y="10" width="4" height="10" rx="1"/><rect x="20" y="6" width="4" height="14" rx="1"/></svg></div>
                     Sampler DJ profesional con librería de efectos
                 </div>
                 <div class="feature-item">
-                    <div class="feature-icon">📺</div>
+                    <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M2 17h20M6 21h12"/></svg></div>
                     Cintillos publicitarios en TV para generar ingresos
                 </div>
                 <div class="feature-item">
-                    <div class="feature-icon">🛎️</div>
+                    <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/></svg></div>
                     Módulo de mesero con seguimiento en tiempo real
                 </div>
             </div>
@@ -532,6 +548,10 @@ html, body {
                 <div class="step-circle">4</div>
                 <div class="step-label">Plan</div>
             </div>
+            <button class="btn-reset-form" onclick="clearFormProgress()" title="Borra todos los datos guardados y empieza de nuevo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+                Empezar de nuevo
+            </button>
         </div>
 
         <!-- ── STEP 1: CUENTA ── -->
@@ -546,7 +566,7 @@ html, body {
                     <div class="field-error" id="err-name">Requerido</div>
                 </div>
                 <div class="field">
-                    <label class="field-label">Apellido</label>
+                    <label class="field-label">Apellido(s)</label>
                     <input id="f-surname" class="field-input" type="text" placeholder="Lozano" autocomplete="family-name">
                     <div class="field-error" id="err-surname">Requerido</div>
                 </div>
@@ -559,8 +579,25 @@ html, body {
             </div>
 
             <div class="field">
-                <label class="field-label">WhatsApp / Teléfono</label>
-                <input id="f-phone" class="field-input" type="tel" placeholder="+52 868 169 4978" autocomplete="tel">
+                <label class="field-label">WhatsApp</label>
+                <div style="display:grid;grid-template-columns:100px 1fr;gap:8px;align-items:flex-start;">
+                    <select id="f-country-code" class="field-select">
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+52" selected>🇲🇽 +52</option>
+                        <option value="+55">🇧🇷 +55</option>
+                        <option value="+56">🇨🇱 +56</option>
+                        <option value="+57">🇨🇴 +57</option>
+                        <option value="+58">🇻🇪 +58</option>
+                        <option value="+34">🇪🇸 +34</option>
+                        <option value="+39">🇮🇹 +39</option>
+                        <option value="+49">🇩🇪 +49</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+33">🇫🇷 +33</option>
+                        <option value="+51">🇵🇪 +51</option>
+                        <option value="+54">🇦🇷 +54</option>
+                    </select>
+                    <input id="f-phone" class="field-input" type="tel" placeholder="868 169 4978" style="grid-column:2;">
+                </div>
                 <div class="field-hint">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
                     Te enviaremos alertas importantes del sistema aquí
@@ -629,45 +666,55 @@ html, body {
                 <label class="field-label">Tipo de negocio</label>
                 <div class="type-grid" id="type-grid">
                     <div class="type-card selected" data-type="bar" onclick="selectType(this,'bar')">
-                        <div class="type-icon">🍺</div><div class="type-name">Bar</div>
+                        <div class="type-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/></svg></div><div class="type-name">Bar</div>
                     </div>
                     <div class="type-card" data-type="cantina" onclick="selectType(this,'cantina')">
-                        <div class="type-icon">🥃</div><div class="type-name">Cantina</div>
+                        <div class="type-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 2h10v9c0 1.5-2.2 3-5 3s-5-1.5-5-3V2z"/><path d="M6 11h12"/><path d="M7 11h1v3H7z M16 11h1v3h-1z"/></svg></div><div class="type-name">Cantina</div>
                     </div>
                     <div class="type-card" data-type="restaurante" onclick="selectType(this,'restaurante')">
-                        <div class="type-icon">🍽️</div><div class="type-name">Restaurante</div>
+                        <div class="type-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></div><div class="type-name">Restaurante</div>
                     </div>
                     <div class="type-card" data-type="salon" onclick="selectType(this,'salon')">
-                        <div class="type-icon">🎉</div><div class="type-name">Salón</div>
+                        <div class="type-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M2 17h20M6 21h12"/></svg></div><div class="type-name">Salón</div>
                     </div>
                     <div class="type-card" data-type="karaoke" onclick="selectType(this,'karaoke')">
-                        <div class="type-icon">🎤</div><div class="type-name">Karaoke</div>
+                        <div class="type-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg></div><div class="type-name">Karaoke</div>
                     </div>
                     <div class="type-card" data-type="otro" onclick="selectType(this,'otro')">
-                        <div class="type-icon">🏠</div><div class="type-name">Otro</div>
+                        <div class="type-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="5" r="1"/><circle cx="5" cy="19" r="1"/><path d="M12 13v8M11 12l-5 5M12 11V3M13 12l5-5"/></svg></div><div class="type-name">Otro</div>
                     </div>
                 </div>
             </div>
 
-            <div class="field-row">
-                <div class="field">
-                    <label class="field-label">Ciudad</label>
-                    <input id="f-city" class="field-input" type="text" placeholder="Monterrey">
-                    <div class="field-error" id="err-city">Requerido</div>
-                </div>
-                <div class="field">
-                    <label class="field-label">País</label>
-                    <select id="f-country" class="field-select">
-                        <option value="MX">🇲🇽 México</option>
-                        <option value="CO">🇨🇴 Colombia</option>
-                        <option value="AR">🇦🇷 Argentina</option>
-                        <option value="CL">🇨🇱 Chile</option>
-                        <option value="PE">🇵🇪 Perú</option>
-                        <option value="US">🇺🇸 Estados Unidos</option>
-                        <option value="ES">🇪🇸 España</option>
-                        <option value="otro">🌎 Otro</option>
-                    </select>
-                </div>
+            <div class="field">
+                <label class="field-label">País</label>
+                <select id="f-country" class="field-select" onchange="updateStates()">
+                    <option value="">Selecciona un país</option>
+                    <option value="MX">🇲🇽 México</option>
+                    <option value="CO">🇨🇴 Colombia</option>
+                    <option value="AR">🇦🇷 Argentina</option>
+                    <option value="CL">🇨🇱 Chile</option>
+                    <option value="PE">🇵🇪 Perú</option>
+                    <option value="US">🇺🇸 Estados Unidos</option>
+                    <option value="ES">🇪🇸 España</option>
+                </select>
+                <div class="field-error" id="err-city">Requerido</div>
+            </div>
+
+            <div class="field">
+                <label class="field-label">Estado/Provincia</label>
+                <select id="f-state" class="field-select" onchange="updateCities()">
+                    <option value="">Selecciona un estado</option>
+                </select>
+                <div class="field-error" id="err-state">Requerido</div>
+            </div>
+
+            <div class="field">
+                <label class="field-label">Ciudad</label>
+                <select id="f-city-select" class="field-select">
+                    <option value="">Selecciona una ciudad</option>
+                </select>
+                <div class="field-error" id="err-city-select">Requerido</div>
             </div>
 
             <div class="field">
@@ -978,6 +1025,141 @@ function generateSlug(val) {
 }
 
 // ── TYPE ──
+// ── COUNTRIES, STATES, CITIES DATA ──
+// Datos estáticos de países, estados y ciudades
+const locationData = {
+    'MX': {
+        name: 'México',
+        states: {
+            'Jalisco': ['Guadalajara', 'Zapopan', 'Tlaquepaque', 'Tonalá', 'Chapala'],
+            'Nuevo León': ['Monterrey', 'San Pedro', 'Santa Catarina', 'Apodaca', 'Guadalupe'],
+            'CDMX': ['Benito Juárez', 'Cuauhtémoc', 'Iztapalapa', 'Coyoacán', 'Álvaro Obregón'],
+            'Quintana Roo': ['Cancún', 'Playa del Carmen', 'Tulum', 'Cozumel', 'Puerto Morelos'],
+            'Baja California': ['Tijuana', 'Mexicali', 'Ensenada', 'Rosarito', 'San Quintín'],
+            'Puebla': ['Puebla', 'Cholula', 'Huauchinango', 'Zacatlán'],
+            'Veracruz': ['Veracruz', 'Xalapa', 'Coatzacoalcos', 'Orizaba'],
+            'Yucatán': ['Mérida', 'Valladolid', 'Progreso', 'Motul']
+        }
+    },
+    'CO': {
+        name: 'Colombia',
+        states: {
+            'Antioquia': ['Medellín', 'Envigado', 'Sabaneta', 'Itaguí'],
+            'Cundinamarca': ['Bogotá', 'Soacha', 'Zipaquirá', 'Ubaté'],
+            'Atlántico': ['Barranquilla', 'Soledad', 'Malambo', 'Puerto Colombia'],
+            'Valle del Cauca': ['Cali', 'Palmira', 'Buenaventura', 'Cartago'],
+            'Bolívar': ['Cartagena', 'Turbaco', 'Arjona'],
+            'Cauca': ['Popayán', 'Santander de Quilichao']
+        }
+    },
+    'AR': {
+        name: 'Argentina',
+        states: {
+            'Buenos Aires': ['CABA', 'La Plata', 'Lomas de Zamora', 'Lanús'],
+            'Córdoba': ['Córdoba', 'Villa María', 'Río Cuarto'],
+            'Mendoza': ['Mendoza', 'San Rafael', 'Godoy Cruz'],
+            'Santa Fe': ['Rosario', 'Santa Fe', 'Paraná'],
+            'Tucumán': ['San Miguel de Tucumán', 'Tafí Viejo']
+        }
+    },
+    'CL': {
+        name: 'Chile',
+        states: {
+            'Metropolitana': ['Santiago', 'Las Condes', 'Ñuñoa', 'Puente Alto'],
+            'Región Valparaíso': ['Valparaíso', 'Viña del Mar', 'Concón', 'Quintero'],
+            'Región Biobío': ['Concepción', 'Talcahuano', 'Los Ángeles'],
+            'Región de Coquimbo': ['La Serena', 'Coquimbo']
+        }
+    },
+    'PE': {
+        name: 'Perú',
+        states: {
+            'Lima': ['Lima', 'Miraflores', 'San Isidro', 'Surquillo'],
+            'Arequipa': ['Arequipa', 'Yanahuara', 'Paucarpata'],
+            'Cusco': ['Cusco', 'Urubamba', 'Machu Picchu'],
+            'Junín': ['Huancayo', 'Concepción']
+        }
+    },
+    'US': {
+        name: 'Estados Unidos',
+        states: {
+            'California': ['Los Angeles', 'San Francisco', 'San Diego', 'Oakland'],
+            'Texas': ['Houston', 'Dallas', 'Austin', 'San Antonio'],
+            'Florida': ['Miami', 'Orlando', 'Tampa', 'Jacksonville'],
+            'Nueva York': ['Nueva York', 'Buffalo', 'Rochester'],
+            'Illinois': ['Chicago', 'Springfield']
+        }
+    },
+    'ES': {
+        name: 'España',
+        states: {
+            'Madrid': ['Madrid', 'Alcalá de Henares', 'Móstoles'],
+            'Cataluña': ['Barcelona', 'Sabadell', 'Terrassa'],
+            'Valencia': ['Valencia', 'Torrent', 'Requena'],
+            'Andalucía': ['Sevilla', 'Málaga', 'Granada'],
+            'País Vasco': ['Bilbao', 'Vitoria', 'San Sebastián']
+        }
+    }
+};
+
+function updateStates() {
+    const countrySelect = document.getElementById('f-country');
+    const stateSelect = document.getElementById('f-state');
+    const citySelect = document.getElementById('f-city-select');
+    const countryCode = countrySelect.value;
+    
+    stateSelect.innerHTML = '<option value="">Selecciona un estado</option>';
+    citySelect.innerHTML = '<option value="">Selecciona una ciudad</option>';
+    citySelect.disabled = true;
+    
+    if (!countryCode) return;
+    
+    const country = locationData[countryCode];
+    if (!country) {
+        stateSelect.innerHTML = '<option value="">Este país no está disponible</option>';
+        return;
+    }
+    
+    const states = Object.keys(country.states);
+    states.forEach(state => {
+        const option = document.createElement('option');
+        option.value = state;
+        option.textContent = state;
+        stateSelect.appendChild(option);
+    });
+}
+
+function updateCities() {
+    const countrySelect = document.getElementById('f-country');
+    const stateSelect = document.getElementById('f-state');
+    const citySelect = document.getElementById('f-city-select');
+    const countryCode = countrySelect.value;
+    const state = stateSelect.value;
+    
+    citySelect.innerHTML = '<option value="">Selecciona una ciudad</option>';
+    citySelect.disabled = true;
+    
+    if (!countryCode || !state) {
+        return;
+    }
+    
+    const country = locationData[countryCode];
+    if (!country || !country.states[state]) {
+        citySelect.innerHTML = '<option value="">Este estado no está disponible</option>';
+        return;
+    }
+    
+    const cities = country.states[state];
+    cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+    });
+    
+    citySelect.disabled = false;
+}
+
 function selectType(el, type) {
     document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
@@ -1058,12 +1240,16 @@ function goStep2() {
 function goStep3() {
     const vname = document.getElementById('f-vname').value.trim();
     const slug  = document.getElementById('f-slug').value.trim();
-    const city  = document.getElementById('f-city').value.trim();
+    const state = document.getElementById('f-state').value;
+    const city  = document.getElementById('f-city-select').value;
     const ytkey = document.getElementById('f-ytkey').value.trim();
+    const country = document.getElementById('f-country').value;
     let ok = true;
     if (fieldErr('f-vname','err-vname',!vname)) ok = false;
     if (fieldErr('f-slug','err-slug',!slug || !/^[a-z0-9-]+$/.test(slug))) ok = false;
-    if (fieldErr('f-city','err-city',!city)) ok = false;
+    if (fieldErr('f-country','err-city',!country)) ok = false;
+    if (fieldErr('f-state','err-city',!state)) ok = false;
+    if (fieldErr('f-city-select','err-city',!city)) ok = false;
     if (fieldErr('f-ytkey','err-ytkey',!ytkey)) ok = false;
     if (ok) goStep(3);
 }
@@ -1086,9 +1272,11 @@ async function submitRegistration() {
         const name  = document.getElementById('f-name').value.trim();
         const surna = document.getElementById('f-surname').value.trim();
         const phone = document.getElementById('f-phone').value.trim();
+        const countryCode = document.getElementById('f-country-code').value;
         const vname = document.getElementById('f-vname').value.trim();
         const slug  = document.getElementById('f-slug').value.trim();
-        const city  = document.getElementById('f-city').value.trim();
+        const state = document.getElementById('f-state').value;
+        const city  = document.getElementById('f-city-select').value;
         const country = document.getElementById('f-country').value;
         const ytkey = document.getElementById('f-ytkey').value.trim();
         const capacity = document.getElementById('f-capacity').value;
@@ -1111,7 +1299,7 @@ async function submitRegistration() {
 
         await venueRef.set({
             name: vname, slug, type: selectedType,
-            city, country, ytApiKey: ytkey,
+            state, city, country, ytApiKey: ytkey,
             capacity, source, coupon,
             color: selectedColor,
             logo: logoBase64 || null,
@@ -1119,7 +1307,7 @@ async function submitRegistration() {
             status: 'trial',
             trialUntil: firebase.firestore.Timestamp.fromDate(trialUntil),
             ownerUid: uid, ownerEmail: email,
-            ownerName: `${name} ${surna}`, ownerPhone: phone,
+            ownerName: `${name} ${surna}`, ownerPhone: `${countryCode} ${phone}`,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -1127,7 +1315,7 @@ async function submitRegistration() {
         // 3. Guardar perfil del owner como staff admin
         await db.collection('venues').doc(slug)
             .collection('staff_profiles').doc(uid).set({
-                uid, email, name, surname: surna, phone,
+                uid, email, name, surname: surna, phone: `${countryCode} ${phone}`,
                 role: 'admin', createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
@@ -1176,6 +1364,58 @@ function copyUrl(id) {
 function goToAdmin() {
     window.location.href = `admin.html?venue=${registeredVenueId}`;
 }
+
+// ── AUTO-SAVE TO LOCALSTORAGE ──
+const formFieldIds = [
+    'f-email', 'f-password', 'f-name', 'f-surname', 'f-phone', 'f-country-code',
+    'f-vname', 'f-slug', 'f-country', 'f-state', 'f-city-select',
+    'f-ytkey', 'f-capacity', 'f-source', 'f-coupon'
+];
+
+function saveFormProgress() {
+    const formData = {};
+    formFieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            formData[id] = el.value;
+        }
+    });
+    localStorage.setItem('crowdplay_form_progress', JSON.stringify(formData));
+}
+
+function restoreFormProgress() {
+    const saved = localStorage.getItem('crowdplay_form_progress');
+    if (!saved) return;
+    
+    const formData = JSON.parse(saved);
+    formFieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && formData[id]) {
+            el.value = formData[id];
+        }
+    });
+}
+
+function clearFormProgress() {
+    if (confirm('¿Estás seguro que quieres empezar de nuevo? Se borrarán todos los datos guardados.')) {
+        localStorage.removeItem('crowdplay_form_progress');
+        location.reload();
+    }
+}
+
+// Restaurar al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    restoreFormProgress();
+    
+    // Guardar cuando cambien los campos
+    formFieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('change', saveFormProgress);
+            el.addEventListener('input', saveFormProgress);
+        }
+    });
+});
 </script>
 </body>
 </html>
