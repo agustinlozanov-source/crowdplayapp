@@ -2273,7 +2273,7 @@ async function initFirebase() {
 
         const syncTimeout = setTimeout(() => setSyncError('Tiempo de conexión agotado.'), 12000);
 
-        const proceedApp = () => {
+        window.proceedApp = () => {
             clearTimeout(syncTimeout);
             isAppReady = true;
             document.getElementById('loading-screen').classList.add('hidden');
@@ -2287,7 +2287,7 @@ async function initFirebase() {
 
         if (isAdminRoute) {
             // Admin route: no requiere anonymous auth
-            proceedApp();
+            window.proceedApp();
         } else {
             // Cliente: verificar si ya hay sesión activa
             authStateUnsubscribe = auth.onAuthStateChanged(async user => {
@@ -2304,7 +2304,7 @@ async function initFirebase() {
                     }
                     if (profile && profile.exists) {
                         localStorage.setItem('rocola_user_v1', JSON.stringify({ ...profile.data(), id: user.uid }));
-                        proceedApp();
+                        window.proceedApp();
                     } else {
                         // Tiene auth pero no perfil — mostrar registro
                         document.getElementById('loading-screen').classList.add('hidden');
